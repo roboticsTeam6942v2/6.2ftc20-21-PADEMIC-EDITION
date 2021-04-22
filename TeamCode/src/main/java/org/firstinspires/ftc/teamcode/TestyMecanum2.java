@@ -21,6 +21,7 @@ public class TestyMecanum2 extends OpMode {
     private DcMotor rightRear  = null;
 
     double wheelSpeedAdadpter=0;
+    //double wheelCounterButtonA=0;
 
     @Override
     public void init() {
@@ -70,11 +71,41 @@ public class TestyMecanum2 extends OpMode {
 
         // You may need to multiply some of these by -1 to invert direction of
         // the motor.  This is not an issue with the calculations themselves.
+
+        /*Slows wheel motors while a is held
         if (gamepad1.a) {
             wheelSpeedAdadpter=.5;
         } else {
             wheelSpeedAdadpter=0;
         }
+         */
+
+        /*Slows wheel motors when a is pressed, press again to disable (you must enable the variable "wheelCounterButtonA")
+        if (gamepad1.a) && wheelCounterButtonA==0{
+            wheelSpeedAdadpter=.5;
+            wheelCounterButtonA=1;
+        }
+        if (gamepad1.a) && wheelCounterButtonA==1{
+            wheelSpeedAdadpter=1;
+            wheelCounterButtonA=0;
+        }
+         */
+
+        /*Slows wheel motors variably based on right trigger
+        if gamepad1.right_trigger {
+        wheelSpeedAdadpter=gamepad1.right_trigger;
+        } else {
+        wheelSpeedAdadpter=0;
+         */
+
+        /*Slows wheel motors when b is pressed, returns motors to full speed when a is pressed wheel motors when b is pressed
+        if (gamepad1.a){
+            wheelSpeedAdadpter=1;
+        }
+         if (gamepad1.b){
+            wheelSpeedAdadpter=.5;
+        }
+         */
 
         double[] speeds = {
                 (drive + strafe + twist),
