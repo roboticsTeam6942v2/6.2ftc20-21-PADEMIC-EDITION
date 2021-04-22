@@ -81,11 +81,11 @@ public class TestyMecanum2 extends OpMode {
          */
 
         /*Slows wheel motors when a is pressed, press again to disable (you must enable the variable "wheelCounterButtonA")
-        if (gamepad1.a) && wheelCounterButtonA==0{
+        if (gamepad1.a && wheelCounterButtonA==0){
             wheelSpeedAdadpter=.5;
             wheelCounterButtonA=1;
         }
-        if (gamepad1.a) && wheelCounterButtonA==1{
+        if (gamepad1.a && wheelCounterButtonA==1){
             wheelSpeedAdadpter=1;
             wheelCounterButtonA=0;
         }
