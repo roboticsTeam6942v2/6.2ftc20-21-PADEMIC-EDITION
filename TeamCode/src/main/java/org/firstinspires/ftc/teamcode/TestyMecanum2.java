@@ -5,12 +5,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-/**
- * This is an example minimal implementation of the mecanum drivetrain
- * for demonstration purposes.  Not tested and not guaranteed to be bug free.
- *
- * @author Brandon Gong
- */
 @TeleOp(name="Mecanum Drive Example", group="Iterative Opmode")
 public class TestyMecanum2 extends OpMode {
 
@@ -26,6 +20,8 @@ public class TestyMecanum2 extends OpMode {
     private DcMotor leftRear   = null;
     private DcMotor rightRear  = null;
 
+    double wheelSpeedAdadpter=0;
+
     @Override
     public void init() {
 
@@ -35,7 +31,7 @@ public class TestyMecanum2 extends OpMode {
         rightFront  = hardwareMap.get(DcMotor.class, "rightFront");
         leftRear    = hardwareMap.get(DcMotor.class, "leftRear");
         rightRear   = hardwareMap.get(DcMotor.class, "rightRear");
-        
+
         rightFront.setDirection(DcMotorSimple.Direction.FORWARD); //changed some of the directions.
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -48,7 +44,7 @@ public class TestyMecanum2 extends OpMode {
         // Mecanum drive is controlled with three axes: drive (front-and-back),
         // strafe (left-and-right), and twist (rotating the whole chassis).
         double drive  = -gamepad1.left_stick_y; //was positive.
-        double strafe = gamepad1.left_stick_x * 1.5; //Makes strafing better idk how though.
+        double strafe = gamepad1.left_stick_x * 1.5; //Makes angles more accurate becasue the wheels have to turn more to go sideways, so it allows the bot to adapt better when it comes to going at obscure angles on the plane
         double twist  = gamepad1.right_stick_x;
 
         /*
@@ -74,11 +70,17 @@ public class TestyMecanum2 extends OpMode {
 
         // You may need to multiply some of these by -1 to invert direction of
         // the motor.  This is not an issue with the calculations themselves.
+        if (gamepad2.b) {
+            wheelSpeedAdadpter=.5;
+        } else {
+            wheelSpeedAdadpter=0;
+        }
+
         double[] speeds = {
-            (drive + strafe + twist),
-            (drive - strafe - twist),
-            (drive - strafe + twist),
-            (drive + strafe - twist)
+                (drive + strafe + twist),
+                (drive - strafe - twist),
+                (drive - strafe + twist),
+                (drive + strafe - twist)
         };
 
         // Because we are adding vectors and motors only take values between
@@ -98,9 +100,9 @@ public class TestyMecanum2 extends OpMode {
         }
 
         // apply the calculated values to the motors.
-        leftFront.setPower(speeds[0]);
-        rightFront.setPower(speeds[1]);
-        leftRear.setPower(speeds[2]);
-        rightRear.setPower(speeds[3]);
+        leftFront.setPower(speeds[0]-wheelSpeedAdadpter);
+        rightFront.setPower(speeds[1]-wheelSpeedAdadpter);
+        leftRear.setPower(speeds[2]-wheelSpeedAdadpter);
+        rightRear.setPower(speeds[3]-wheelSpeedAdadpter);
     }
 }
