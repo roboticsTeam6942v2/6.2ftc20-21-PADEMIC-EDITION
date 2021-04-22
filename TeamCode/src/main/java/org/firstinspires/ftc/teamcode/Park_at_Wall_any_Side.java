@@ -24,7 +24,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 
 //Note: When active @Disabled will remove to code from the RC's Auto menu. 
-//@Disabled 
+@Disabled
 @Autonomous
 
 public class Park_at_Wall_any_Side extends LinearOpMode {
