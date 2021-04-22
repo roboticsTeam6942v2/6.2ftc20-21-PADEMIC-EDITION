@@ -70,7 +70,7 @@ public class TestyMecanum2 extends OpMode {
 
         // You may need to multiply some of these by -1 to invert direction of
         // the motor.  This is not an issue with the calculations themselves.
-        if (gamepad2.b) {
+        if (gamepad1.a) {
             wheelSpeedAdadpter=.5;
         } else {
             wheelSpeedAdadpter=0;
