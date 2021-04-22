@@ -152,11 +152,5 @@ public class TestyMecanum2 extends OpMode {
             wheelSpeedAdadpter=originalWheelSpeedAdadpter*-1;
         }
         rightRear.setPower(speeds[3]-wheelSpeedAdadpter);
-
-
-        leftFront.setPower(speeds[0]-wheelSpeedAdadpter);
-        rightFront.setPower(speeds[1]-wheelSpeedAdadpter);
-        leftRear.setPower(speeds[2]-wheelSpeedAdadpter);
-        rightRear.setPower(speeds[3]-wheelSpeedAdadpter);
     }
 }
