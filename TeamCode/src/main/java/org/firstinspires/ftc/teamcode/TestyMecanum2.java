@@ -86,7 +86,7 @@ public class TestyMecanum2 extends OpMode {
             wheelCounterButtonA=1;
         }
         if (gamepad1.a && wheelCounterButtonA==1){
-            wheelSpeedAdadpter=1;
+            wheelSpeedAdadpter=0;
             wheelCounterButtonA=0;
         }
          */
@@ -100,7 +100,7 @@ public class TestyMecanum2 extends OpMode {
 
         /*Slows wheel motors when b is pressed, returns motors to full speed when a is pressed wheel motors when b is pressed
         if (gamepad1.a){
-            wheelSpeedAdadpter=1;
+            wheelSpeedAdadpter=0;
         }
          if (gamepad1.b){
             wheelSpeedAdadpter=.5;
@@ -130,7 +130,30 @@ public class TestyMecanum2 extends OpMode {
             for (int i = 0; i < speeds.length; i++) speeds[i] /= max;
         }
 
-        // apply the calculated values to the motors.
+        // apply the calculated values to the motors, and modify it for direction
+        double originalWheelSpeedAdadpter=wheelSpeedAdadpter;
+
+        if (speeds[0] < 0) {
+            wheelSpeedAdadpter=originalWheelSpeedAdadpter*-1;
+        }
+        leftFront.setPower(speeds[0]-wheelSpeedAdadpter);
+
+        if (speeds[1] < 0) {
+            wheelSpeedAdadpter=originalWheelSpeedAdadpter*-1;
+        }
+        rightFront.setPower(speeds[1]-wheelSpeedAdadpter);
+
+        if (speeds[2] < 0) {
+            wheelSpeedAdadpter=originalWheelSpeedAdadpter*-1;
+        }
+        leftRear.setPower(speeds[2]-wheelSpeedAdadpter);
+
+        if (speeds[3] < 0) {
+            wheelSpeedAdadpter=originalWheelSpeedAdadpter*-1;
+        }
+        rightRear.setPower(speeds[3]-wheelSpeedAdadpter);
+
+
         leftFront.setPower(speeds[0]-wheelSpeedAdadpter);
         rightFront.setPower(speeds[1]-wheelSpeedAdadpter);
         leftRear.setPower(speeds[2]-wheelSpeedAdadpter);
