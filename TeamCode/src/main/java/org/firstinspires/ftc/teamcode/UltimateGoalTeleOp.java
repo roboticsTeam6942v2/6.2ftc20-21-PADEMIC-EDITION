@@ -52,6 +52,9 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         // looping code during the game
         while(!isStopRequested()) {
 
+            telemetry.addData("Status", "Running");
+            telemetry.update();
+
             // declare the values of the joysticks
             double drive  = -gamepad1.left_stick_y;
             double strafe = gamepad1.left_stick_x * 1.5; //Makes angles more accurate because the wheels have to turn more to go sideways, so it allows the bot to adapt better when it comes to going at obscure angles on the plane

@@ -41,6 +41,9 @@ public class TestyMecanum2 extends OpMode {
     @Override
     public void loop() {
 
+        telemetry.addData("Status", "Running");
+        telemetry.update();
+
         // Mecanum drive is controlled with three axes: drive (front-and-back),
         // strafe (left-and-right), and twist (rotating the whole chassis).
         double drive  = -gamepad1.left_stick_y; //was positive.
