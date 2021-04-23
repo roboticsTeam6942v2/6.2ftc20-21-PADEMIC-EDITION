@@ -49,10 +49,16 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         grabbingRollers = hardwareMap.get(DcMotor.class, "grabbingRollers");
         grabbingRollers.setDirection(DcMotorSimple.Direction.FORWARD);//swap with REVERSE if the motor goes the wrong way
 
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
         waitForStart();
 
         // looping code during the game
         while(!isStopRequested()) {
+
+            telemetry.addData("Status", "Running");
+            telemetry.update();
 
             // declare the values of the joysticks
             double drive  = -gamepad1.left_stick_y;

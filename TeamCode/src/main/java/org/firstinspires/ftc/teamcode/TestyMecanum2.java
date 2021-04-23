@@ -41,6 +41,9 @@ public class TestyMecanum2 extends OpMode {
     @Override
     public void loop() {
 
+        telemetry.addData("Status", "Running");
+        telemetry.update();
+
         // Mecanum drive is controlled with three axes: drive (front-and-back),
         // strafe (left-and-right), and twist (rotating the whole chassis).
         double drive  = -gamepad1.left_stick_y; //was positive.
@@ -119,8 +122,8 @@ public class TestyMecanum2 extends OpMode {
         // Loop through all values in the speeds[] array and find the greatest
         // *magnitude*.  Not the greatest velocity.
         double max = Math.abs(speeds[0]);
-        for(int i = 0; i < speeds.length; i++) {
-            if ( max < Math.abs(speeds[i]) ) max = Math.abs(speeds[i]);
+        for (double speed : speeds) {
+            if (max < Math.abs(speed)) max = Math.abs(speed);
         }
 
         // If and only if the maximum is outside of the range we want it to be,
