@@ -26,8 +26,7 @@ public class TestyMecanum2 extends OpMode {
     @Override
     public void init() {
 
-        // Name strings must match up with the config on the Robot Controller
-        // app.
+        // Name strings must match up with the config on the Robot Controller app.
         leftFront   = hardwareMap.get(DcMotor.class, "leftFront");
         rightFront  = hardwareMap.get(DcMotor.class, "rightFront");
         leftRear    = hardwareMap.get(DcMotor.class, "leftRear");
