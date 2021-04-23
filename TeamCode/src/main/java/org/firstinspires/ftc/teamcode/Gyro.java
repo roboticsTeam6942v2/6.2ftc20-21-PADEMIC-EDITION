@@ -25,11 +25,6 @@ public class Gyro extends LinearOpMode {
 
     Orientation             lastAngles = new Orientation();
     double                  globalAngle, power = .30, correction;
-    // declare and initialize four DcMotors.
-    private DcMotor leftFront  = null;
-    private DcMotor rightFront = null;
-    private DcMotor leftRear   = null;
-    private DcMotor rightRear  = null;
 
     // The IMU sensor object
     BNO055IMU imu;
@@ -42,10 +37,11 @@ public class Gyro extends LinearOpMode {
     public void runOpMode() {
 
         // Name strings must match up with the config on the Robot Controller app.
-        leftFront   = hardwareMap.get(DcMotor.class, "leftFront");
-        rightFront  = hardwareMap.get(DcMotor.class, "rightFront");
-        leftRear    = hardwareMap.get(DcMotor.class, "leftRear");
-        rightRear   = hardwareMap.get(DcMotor.class, "rightRear");
+        // declare and initialize four DcMotors.
+        DcMotor leftFront = hardwareMap.get(DcMotor.class, "leftFront");
+        DcMotor rightFront = hardwareMap.get(DcMotor.class, "rightFront");
+        DcMotor leftRear = hardwareMap.get(DcMotor.class, "leftRear");
+        DcMotor rightRear = hardwareMap.get(DcMotor.class, "rightRear");
 
         rightFront.setDirection(DcMotorSimple.Direction.FORWARD); //changed some of the directions.
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -89,60 +85,29 @@ public class Gyro extends LinearOpMode {
 
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
-        telemetry.addAction(new Runnable() { @Override public void run()
-        {
+        telemetry.addAction(() -> {
             // Acquiring the angles is relatively expensive; we don't want
             // to do that in each of the three items that need that info, as that's
             // three times the necessary expense.
             angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             gravity  = imu.getGravity();
-        }
         });
 
         telemetry.addLine()
-                .addData("status", new Func<String>() {
-                    @Override public String value() {
-                        return imu.getSystemStatus().toShortString();
-                    }
-                })
-                .addData("calib", new Func<String>() {
-                    @Override public String value() {
-                        return imu.getCalibrationStatus().toString();
-                    }
-                });
+                .addData("status", () -> imu.getSystemStatus().toShortString())
+                .addData("calib", () -> imu.getCalibrationStatus().toString());
 
         telemetry.addLine()
-                .addData("heading", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.firstAngle);
-                    }
-                })
-                .addData("roll", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.secondAngle);
-                    }
-                })
-                .addData("pitch", new
-                        Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.thirdAngle);
-                    }
-                });
+                .addData("heading", () -> formatAngle(angles.angleUnit, angles.firstAngle))
+                .addData("roll", () -> formatAngle(angles.angleUnit, angles.secondAngle))
+                .addData("pitch", () -> formatAngle(angles.angleUnit, angles.thirdAngle));
 
         telemetry.addLine()
-                .addData("grvty", new Func<String>() {
-                    @Override public String value() {
-                        return gravity.toString();
-                    }
-                })
-                .addData("mag", new Func<String>() {
-                    @Override public String value() {
-                        return String.format(Locale.getDefault(), "%.3f",
-                                Math.sqrt(gravity.xAccel*gravity.xAccel
-                                        + gravity.yAccel*gravity.yAccel
-                                        + gravity.zAccel*gravity.zAccel));
-                    }
-                });
+                .addData("grvty", () -> gravity.toString())
+                .addData("mag", () -> String.format(Locale.getDefault(), "%.3f",
+                        Math.sqrt(gravity.xAccel*gravity.xAccel
+                                + gravity.yAccel*gravity.yAccel
+                                + gravity.zAccel*gravity.zAccel)));
     }
 
     //----------------------------------------------------------------------------------------------
