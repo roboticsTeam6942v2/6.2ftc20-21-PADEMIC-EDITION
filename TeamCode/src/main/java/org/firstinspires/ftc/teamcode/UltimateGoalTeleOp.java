@@ -10,38 +10,43 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class UltimateGoalTeleOp extends LinearOpMode {
 
-    boolean launcherRunning=false;
+    boolean launcherRunning  = false;
+    double wheelSpeedAdapter = 0;
+    boolean rollersRunning   = false;
 
-    double wheelSpeedAdapter =0;
-
-    boolean rollersRunning=false;
-
-
+    //Declaring the motors
+    private DcMotor leftFront;
+    private DcMotor rightFront;
+    private DcMotor leftRear;
+    private DcMotor rightRear;
+    private DcMotor diskLauncher;
+    private DcMotor conveyor;
+    private DcMotor grabbingRollers;
 
     @Override
     public void runOpMode() {
 
         // Name strings must match up with the config on the Robot Controller app.
-        // declare and initialize four DcMotors for the drive train, and add the speed variable
-        DcMotor leftFront = hardwareMap.get(DcMotor.class, "leftFront");
-        DcMotor rightFront = hardwareMap.get(DcMotor.class, "rightFront");
-        DcMotor leftRear = hardwareMap.get(DcMotor.class, "leftRear");
-        DcMotor rightRear = hardwareMap.get(DcMotor.class, "rightRear");
+        // initialize four DcMotors for the drive train, and add the speed variable
+        leftFront  = hardwareMap.get(DcMotor.class, "leftFront");
+        rightFront = hardwareMap.get(DcMotor.class, "rightFront");
+        leftRear   = hardwareMap.get(DcMotor.class, "leftRear");
+        rightRear  = hardwareMap.get(DcMotor.class, "rightRear");
 
         rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightRear.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        // declare launchers and its variables
-        DcMotor diskLauncher = hardwareMap.get(DcMotor.class, "diskLauncher");
+        // maps launchers to hardware on hub ports and phone
+        diskLauncher = hardwareMap.get(DcMotor.class, "diskLauncher");
         diskLauncher.setDirection(DcMotorSimple.Direction.FORWARD);//swap with REVERSE if the motor goes the wrong way
 
-        // declare picking up and moving systems
-        DcMotor conveyor = hardwareMap.get(DcMotor.class, "conveyor");
+        // maps picking up and moving systems
+        conveyor = hardwareMap.get(DcMotor.class, "conveyor");
         conveyor.setDirection(DcMotorSimple.Direction.FORWARD);//swap with REVERSE if the motor goes the wrong way
 
-        DcMotor grabbingRollers = hardwareMap.get(DcMotor.class, "grabbingRollers");
+        grabbingRollers = hardwareMap.get(DcMotor.class, "grabbingRollers");
         grabbingRollers.setDirection(DcMotorSimple.Direction.FORWARD);//swap with REVERSE if the motor goes the wrong way
 
         waitForStart();
