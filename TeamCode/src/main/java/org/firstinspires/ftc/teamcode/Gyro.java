@@ -69,7 +69,7 @@ public class Gyro extends LinearOpMode {
         telemetry.update();
 
         // Set up our telemetry dashboard
-        composeTelemetry();
+        //composeTelemetry(); //don't forget to uncomment this after fixing lambda issue 4/26/21
 
         waitForStart();
 
@@ -81,7 +81,7 @@ public class Gyro extends LinearOpMode {
     // Telemetry Configuration
     //----------------------------------------------------------------------------------------------
 
-    void composeTelemetry() {
+/*    void composeTelemetry() {
 
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
@@ -108,7 +108,7 @@ public class Gyro extends LinearOpMode {
                         Math.sqrt(gravity.xAccel*gravity.xAccel
                                 + gravity.yAccel*gravity.yAccel
                                 + gravity.zAccel*gravity.zAccel)));
-    }
+    } */ //Lambda version 7 error :(
 
     //----------------------------------------------------------------------------------------------
     // Formatting
