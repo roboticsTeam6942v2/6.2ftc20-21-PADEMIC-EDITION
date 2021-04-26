@@ -81,7 +81,7 @@ public class Gyro extends LinearOpMode {
     // Telemetry Configuration
     //----------------------------------------------------------------------------------------------
 
-/*    void composeTelemetry() {
+    /*void composeTelemetry() {
 
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.

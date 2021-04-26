@@ -25,10 +25,13 @@ public class GetGyroPositionTest extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
-            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            telemetry.addData("Heading", angles.firstAngle);
-            telemetry.addData("Roll", angles.secondAngle);
-            telemetry.addData("Pitch", angles.thirdAngle);
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
+            double heading=angles.firstAngle*-1;
+            double roll=angles.secondAngle;
+            double pitch=angles.thirdAngle;
+            telemetry.addData("Heading", heading);
+            telemetry.addData("Roll", roll);
+            telemetry.addData("Pitch", pitch);
             telemetry.update();
         }
 
