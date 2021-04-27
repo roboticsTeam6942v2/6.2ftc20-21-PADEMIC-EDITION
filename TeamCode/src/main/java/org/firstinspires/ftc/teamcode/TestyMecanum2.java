@@ -135,24 +135,9 @@ public class TestyMecanum2 extends OpMode {
         // apply the calculated values to the motors, and modify it for direction
         double originalWheelSpeedAdapter=wheelSpeedAdapter;
 
-        if (speeds[0] < 0) {
-            wheelSpeedAdapter=originalWheelSpeedAdapter*-1;
-        }
-        leftFront.setPower(speeds[0]-wheelSpeedAdapter);
-
-        if (speeds[1] < 0) {
-            wheelSpeedAdapter=originalWheelSpeedAdapter*-1;
-        }
-        rightFront.setPower(speeds[1]-wheelSpeedAdapter);
-
-        if (speeds[2] < 0) {
-            wheelSpeedAdapter=originalWheelSpeedAdapter*-1;
-        }
-        leftRear.setPower(speeds[2]-wheelSpeedAdapter);
-
-        if (speeds[3] < 0) {
-            wheelSpeedAdapter=originalWheelSpeedAdapter*-1;
-        }
-        rightRear.setPower(speeds[3]-wheelSpeedAdapter);
+        leftFront.setPower(speeds[0] * wheelSpeedAdapter);
+        rightFront.setPower(speeds[1] * wheelSpeedAdapter);
+        leftRear.setPower(speeds[2] * wheelSpeedAdapter);
+        rightRear.setPower(speeds[3] * wheelSpeedAdapter);
     }
 }
