@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+@TeleOp
 public class encoderTEST extends LinearOpMode {
     private DcMotor testTest;
 
@@ -19,6 +21,7 @@ public class encoderTEST extends LinearOpMode {
                 testTest.setTargetPosition(1120);
                 testTest.setPower(1);
                 while (testTest.isBusy()) {
+
                 }
 
             }
