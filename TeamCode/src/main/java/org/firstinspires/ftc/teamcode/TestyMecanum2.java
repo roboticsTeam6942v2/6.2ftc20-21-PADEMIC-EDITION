@@ -20,7 +20,7 @@ public class TestyMecanum2 extends OpMode {
     private DcMotor leftRear   = null;
     private DcMotor rightRear  = null;
 
-    double wheelSpeedAdadpter=0;
+    double wheelSpeedAdapter=0;
     //double wheelCounterButtonA=0;
 
     @Override
@@ -76,36 +76,36 @@ public class TestyMecanum2 extends OpMode {
 
         /*Slows wheel motors while a is held
         if (gamepad1.a) {
-            wheelSpeedAdadpter=.5;
+            wheelSpeedAdapter=.5;
         } else {
-            wheelSpeedAdadpter=0;
+            wheelSpeedAdapter=1;
         }
          */
 
         /*Slows wheel motors when a is pressed, press again to disable (you must enable the variable "wheelCounterButtonA")
         if (gamepad1.a && wheelCounterButtonA==0){
-            wheelSpeedAdadpter=.5;
+            wheelSpeedAdapter=.5;
             wheelCounterButtonA=1;
         }
         if (gamepad1.a && wheelCounterButtonA==1){
-            wheelSpeedAdadpter=0;
+            wheelSpeedAdapter=1;
             wheelCounterButtonA=0;
         }
          */
 
         /*Slows wheel motors variably based on right trigger
         if gamepad1.right_trigger {
-        wheelSpeedAdadpter=gamepad1.right_trigger;
+        wheelSpeedAdapter=gamepad1.right_trigger;
         } else {
-        wheelSpeedAdadpter=0;
+        wheelSpeedAdapter=1;
          */
 
         /*Slows wheel motors when b is pressed, returns motors to full speed when a is pressed wheel motors when b is pressed
         if (gamepad1.a){
-            wheelSpeedAdadpter=0;
+            wheelSpeedAdapter=1;
         }
          if (gamepad1.b){
-            wheelSpeedAdadpter=.5;
+            wheelSpeedAdapter=.5;
         }
          */
 
@@ -132,27 +132,10 @@ public class TestyMecanum2 extends OpMode {
             for (int i = 0; i < speeds.length; i++) speeds[i] /= max;
         }
 
-        // apply the calculated values to the motors, and modify it for direction
-        double originalWheelSpeedAdadpter=wheelSpeedAdadpter;
-
-        if (speeds[0] < 0) {
-            wheelSpeedAdadpter=originalWheelSpeedAdadpter*-1;
-        }
-        leftFront.setPower(speeds[0]-wheelSpeedAdadpter);
-
-        if (speeds[1] < 0) {
-            wheelSpeedAdadpter=originalWheelSpeedAdadpter*-1;
-        }
-        rightFront.setPower(speeds[1]-wheelSpeedAdadpter);
-
-        if (speeds[2] < 0) {
-            wheelSpeedAdadpter=originalWheelSpeedAdadpter*-1;
-        }
-        leftRear.setPower(speeds[2]-wheelSpeedAdadpter);
-
-        if (speeds[3] < 0) {
-            wheelSpeedAdadpter=originalWheelSpeedAdadpter*-1;
-        }
-        rightRear.setPower(speeds[3]-wheelSpeedAdadpter);
+        // apply the calculated values to the motors
+        leftFront.setPower(speeds[0] * wheelSpeedAdapter);
+        rightFront.setPower(speeds[1] * wheelSpeedAdapter);
+        leftRear.setPower(speeds[2] * wheelSpeedAdapter);
+        rightRear.setPower(speeds[3] * wheelSpeedAdapter);
     }
 }
