@@ -13,6 +13,7 @@ public class encoderTEST extends LinearOpMode {
         testTest = hardwareMap.get(DcMotor.class, "testTest");
 
         testTest.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        testTest.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         waitForStart();
         while(opModeIsActive()) {
@@ -20,6 +21,8 @@ public class encoderTEST extends LinearOpMode {
             if (gamepad1.a) {
                 testTest.setTargetPosition(1120);
                 testTest.setPower(1);
+
+                testTest.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 while (testTest.isBusy()) {
 
                 }
