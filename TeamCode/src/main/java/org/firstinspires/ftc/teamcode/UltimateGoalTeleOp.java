@@ -21,7 +21,9 @@ public class UltimateGoalTeleOp extends LinearOpMode {
     private DcMotor rightRear;
     private DcMotor diskLauncher;
     private DcMotor conveyor;
-    private DcMotor grabbingRollers;
+    private DcMotor grabbingRollerRight;
+    private DcMotor grabbingRollerLeft;
+
 
     @Override
     public void runOpMode() {
@@ -46,8 +48,11 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         conveyor = hardwareMap.get(DcMotor.class, "conveyor");
         conveyor.setDirection(DcMotorSimple.Direction.FORWARD);//swap with REVERSE if the motor goes the wrong way
 
-        grabbingRollers = hardwareMap.get(DcMotor.class, "grabbingRollers");
-        grabbingRollers.setDirection(DcMotorSimple.Direction.FORWARD);//swap with REVERSE if the motor goes the wrong way
+        grabbingRollerRight = hardwareMap.get(DcMotor.class, "grabbingRollerRight");
+        grabbingRollerRight.setDirection(DcMotorSimple.Direction.FORWARD);//swap with REVERSE if the motor goes the wrong way
+
+        grabbingRollerLeft = hardwareMap.get(DcMotor.class, "grabbingRollerLeft");
+        grabbingRollerLeft.setDirection(DcMotorSimple.Direction.FORWARD);//swap with REVERSE if the motor goes the wrong way
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -132,7 +137,8 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             // runs the speed of the drum at the speed of the right trigger press
             double rightTriggerSpeed=gamepad1.right_trigger;
             if (rightTriggerSpeed>.0001 && !launcherRunning) {
-                grabbingRollers.setPower(rightTriggerSpeed);
+                grabbingRollerRight.setPower(rightTriggerSpeed);
+                grabbingRollerLeft.setPower(rightTriggerSpeed);
                 conveyor.setPower(.3);
                 rollersRunning=true;
             } else if (rightTriggerSpeed<.0001 && !launcherRunning){

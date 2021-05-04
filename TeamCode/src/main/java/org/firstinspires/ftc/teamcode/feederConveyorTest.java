@@ -15,7 +15,8 @@ public class feederConveyorTest extends LinearOpMode {
     private DcMotor leftRear;
     private DcMotor rightRear;
     private DcMotor conveyor;
-    private DcMotor grabbingRollers;
+    private DcMotor grabbingRollerRight;
+    private DcMotor grabbingRollerLeft;
 
     @Override
     public void runOpMode() {
@@ -34,8 +35,11 @@ public class feederConveyorTest extends LinearOpMode {
         conveyor = hardwareMap.get(DcMotor.class, "conveyor");
         conveyor.setDirection(DcMotorSimple.Direction.FORWARD);//swap with REVERSE if the motor goes the wrong way
 
-        grabbingRollers = hardwareMap.get(DcMotor.class, "grabbingRollers");
-        grabbingRollers.setDirection(DcMotorSimple.Direction.FORWARD);//swap with REVERSE if the motor goes the wrong way
+        grabbingRollerRight = hardwareMap.get(DcMotor.class, "grabbingRollerRight");
+        grabbingRollerRight.setDirection(DcMotorSimple.Direction.FORWARD);//swap with REVERSE if the motor goes the wrong way
+
+        grabbingRollerLeft = hardwareMap.get(DcMotor.class, "grabbingRollerLeft");
+        grabbingRollerLeft.setDirection(DcMotorSimple.Direction.FORWARD);//swap with REVERSE if the motor goes the wrong way
 
         waitForStart();
 
@@ -102,7 +106,8 @@ public class feederConveyorTest extends LinearOpMode {
             }
 
             if(gamepad1.b) {
-                grabbingRollers.setPower(1);
+                grabbingRollerRight.setPower(1);
+                grabbingRollerLeft.setPower(1);
             }
         }
 
