@@ -99,10 +99,10 @@ public class feederConveyorTest extends LinearOpMode {
 
             if(gamepad1.a) {
                 conveyor.setPower(1);
+            }
 
             if(gamepad1.b) {
                 grabbingRollers.setPower(1);
-            }
             }
         }
 
