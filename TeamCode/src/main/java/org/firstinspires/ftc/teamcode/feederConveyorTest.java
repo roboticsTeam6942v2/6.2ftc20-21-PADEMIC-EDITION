@@ -17,6 +17,7 @@ public class feederConveyorTest extends LinearOpMode {
     private DcMotor conveyor;
     private DcMotor grabbingRollerRight;
     private DcMotor grabbingRollerLeft;
+    private DcMotor diskLauncher;
 
     @Override
     public void runOpMode() {
@@ -41,10 +42,13 @@ public class feederConveyorTest extends LinearOpMode {
         conveyor.setDirection(DcMotorSimple.Direction.FORWARD);//swap with REVERSE if the motor goes the wrong way
 
         grabbingRollerRight = hardwareMap.get(DcMotor.class, "grabbingRollerRight");
-        grabbingRollerRight.setDirection(DcMotorSimple.Direction.FORWARD);//swap with REVERSE if the motor goes the wrong way
+        grabbingRollerRight.setDirection(DcMotorSimple.Direction.REVERSE);//swap with REVERSE if the motor goes the wrong way
 
         grabbingRollerLeft = hardwareMap.get(DcMotor.class, "grabbingRollerLeft");
-        grabbingRollerLeft.setDirection(DcMotorSimple.Direction.FORWARD);//swap with REVERSE if the motor goes the wrong way
+        grabbingRollerLeft.setDirection(DcMotorSimple.Direction.REVERSE);//swap with REVERSE if the motor goes the wrong way
+
+        diskLauncher = hardwareMap.get(DcMotor.class, "diskLauncher");
+        diskLauncher.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
@@ -106,14 +110,26 @@ public class feederConveyorTest extends LinearOpMode {
             }
             rightRear.setPower(speeds[3]- wheelSpeedAdapter);
 
-            if(gamepad1.a) {
+            if (gamepad1.a) {
+
                 conveyor.setPower(1);
+                grabbingRollerRight.setPower(1);
+                grabbingRollerLeft.setPower(1);
+
+            } else {
+                conveyor.setPower(0);
+                grabbingRollerRight.setPower(0);
+                grabbingRollerLeft.setPower(0);
             }
 
             if(gamepad1.b) {
-                grabbingRollerRight.setPower(1);
-                grabbingRollerLeft.setPower(1);
+                diskLauncher.setPower(0.5);
+            } else {
+                diskLauncher.setPower(0.0);
             }
+
+
+
         }
 
     }
