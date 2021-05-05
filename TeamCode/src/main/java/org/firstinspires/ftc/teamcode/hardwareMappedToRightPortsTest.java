@@ -50,7 +50,7 @@ public class hardwareMappedToRightPortsTest extends LinearOpMode {
         rightRear.setDirection(DcMotorSimple.Direction.FORWARD);
 
         //Reverses feeder motors, not sure if this is the right side either!
-        grabbingRollerLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        grabbingRollerLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         grabbingRollerRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //Reversing the diskLauncher, doing it on a whim idk if it actually has to be reversed or not!
@@ -65,27 +65,39 @@ public class hardwareMappedToRightPortsTest extends LinearOpMode {
 
                 grabbingRollerLeft.setPower(0.2);
                 grabbingRollerRight.setPower(0.2);
+                sleep(2000);
+                grabbingRollerLeft.setPower(0);
+                grabbingRollerRight.setPower(0);
 
             }
 
             if(gamepad1.b) {
 
-                diskLauncher.setPower(0.1);
-                conveyor.setPower(0.2);
+                diskLauncher.setPower(0.3);
+                conveyor.setPower(0.3);
+                sleep(2000);
+                diskLauncher.setPower(0);
+                conveyor.setPower(0);
 
             }
 
             if(gamepad1.left_bumper) {
 
-                leftFront.setPower(0.3);
-                leftRear.setPower(0.3);
+                leftFront.setPower(0.5);
+                leftRear.setPower(0.5);
+                sleep(3000);
+                leftFront.setPower(0);
+                leftRear.setPower(0);
 
             }
 
             if (gamepad1.right_bumper) {
 
-                rightFront.setPower(0.3);
-                rightRear.setPower(0.3);
+                rightFront.setPower(0.5);
+                rightRear.setPower(0.5);
+                sleep(3000);
+                rightFront.setPower(0);
+                rightRear.setPower(0);
 
             }
 
