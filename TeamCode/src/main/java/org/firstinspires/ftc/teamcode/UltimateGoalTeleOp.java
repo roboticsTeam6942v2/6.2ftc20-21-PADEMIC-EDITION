@@ -42,17 +42,17 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
         // maps launchers to hardware on hub ports and phone
         diskLauncher = hardwareMap.get(DcMotor.class, "diskLauncher");
-        diskLauncher.setDirection(DcMotorSimple.Direction.FORWARD);//swap with REVERSE if the motor goes the wrong way
+        diskLauncher.setDirection(DcMotorSimple.Direction.REVERSE);//swap with REVERSE if the motor goes the wrong way
 
         // maps picking up and moving systems
         conveyor = hardwareMap.get(DcMotor.class, "conveyor");
         conveyor.setDirection(DcMotorSimple.Direction.FORWARD);//swap with REVERSE if the motor goes the wrong way
 
         grabbingRollerRight = hardwareMap.get(DcMotor.class, "grabbingRollerRight");
-        grabbingRollerRight.setDirection(DcMotorSimple.Direction.FORWARD);//swap with REVERSE if the motor goes the wrong way
+        grabbingRollerRight.setDirection(DcMotorSimple.Direction.REVERSE);//swap with REVERSE if the motor goes the wrong way
 
         grabbingRollerLeft = hardwareMap.get(DcMotor.class, "grabbingRollerLeft");
-        grabbingRollerLeft.setDirection(DcMotorSimple.Direction.FORWARD);//swap with REVERSE if the motor goes the wrong way
+        grabbingRollerLeft.setDirection(DcMotorSimple.Direction.REVERSE);//swap with REVERSE if the motor goes the wrong way
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
