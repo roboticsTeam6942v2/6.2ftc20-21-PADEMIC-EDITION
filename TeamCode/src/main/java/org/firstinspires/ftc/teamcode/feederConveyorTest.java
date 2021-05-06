@@ -115,7 +115,7 @@ public class feederConveyorTest extends LinearOpMode {
             leftRear.setPower(speeds[2]);
             rightRear.setPower(speeds[3]);
 
-            if (gamepad1.a) {
+            /*if (gamepad1.a) {
 
                 conveyor.setPower(1);
                 grabbingRollerRight.setPower(1);
@@ -131,6 +131,35 @@ public class feederConveyorTest extends LinearOpMode {
                 diskLauncher.setPower(0.5);
             } else {
                 diskLauncher.setPower(0.0);
+            }*/
+
+            if (gamepad1.a) {
+
+                rightFront.setPower(1);
+            } else {
+                rightFront.setPower(0);
+            }
+
+            if (gamepad1.b) {
+
+                leftFront.setPower(1);
+            } else {
+                leftFront.setPower(0);
+            }
+
+            if (gamepad1.x) {
+
+                rightRear.setPower(1);
+            } else {
+                rightRear.setPower(0);
+            }
+
+            if (gamepad1.y) {
+
+                leftRear.setPower(1);
+            } else {
+                leftRear.setPower(0);
+            }
             }
 
 
@@ -138,4 +167,4 @@ public class feederConveyorTest extends LinearOpMode {
         }
 
     }
-}
+
