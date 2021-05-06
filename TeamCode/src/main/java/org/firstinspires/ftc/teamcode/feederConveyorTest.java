@@ -80,7 +80,7 @@ public class feederConveyorTest extends LinearOpMode {
             }
 
             // apply the calculated values to the motors, and modify it for direction
-            /*double originalWheelSpeedAdadpter= wheelSpeedAdapter;
+            double originalWheelSpeedAdadpter= wheelSpeedAdapter;
             String speed="ERROR";
             if (originalWheelSpeedAdadpter==.5) {
                 speed="Half Speed";
@@ -108,14 +108,14 @@ public class feederConveyorTest extends LinearOpMode {
             if (speeds[3] < 0) {
                 wheelSpeedAdapter =originalWheelSpeedAdadpter*-1;
             }
-            rightRear.setPower(speeds[3]- wheelSpeedAdapter);*/
+            rightRear.setPower(speeds[3]- wheelSpeedAdapter);
 
             leftFront.setPower(speeds[0]);
             rightFront.setPower(speeds[1]);
             leftRear.setPower(speeds[2]);
             rightRear.setPower(speeds[3]);
 
-            /*if (gamepad1.a) {
+            if (gamepad1.a) {
 
                 conveyor.setPower(1);
                 grabbingRollerRight.setPower(1);
@@ -131,9 +131,9 @@ public class feederConveyorTest extends LinearOpMode {
                 diskLauncher.setPower(0.5);
             } else {
                 diskLauncher.setPower(0.0);
-            }*/
+            }
 
-            if (gamepad1.a) {
+            /* (gamepad1.a) {
 
                 rightFront.setPower(1);
             } else {
@@ -159,7 +159,7 @@ public class feederConveyorTest extends LinearOpMode {
                 leftRear.setPower(1);
             } else {
                 leftRear.setPower(0);
-            }
+            }*/
             }
 
 
