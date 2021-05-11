@@ -97,12 +97,12 @@ public class UltimateGoalAutonomous extends LinearOpMode {
     }
 
     public void driveForward ( int inches, double speed){
-        inches = (int) Math.round((inches / circumference) * tickCount);
+        int howMuch = (int) Math.round((inches / circumference) * tickCount);
 
-        rightFront.setTargetPosition(inches);
-        leftFront.setTargetPosition(inches);
-        rightRear.setTargetPosition(inches);
-        leftRear.setTargetPosition(inches);
+        rightFront.setTargetPosition(howMuch);
+        leftFront.setTargetPosition(howMuch);
+        rightRear.setTargetPosition(howMuch);
+        leftRear.setTargetPosition(howMuch);
 
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -117,6 +117,11 @@ public class UltimateGoalAutonomous extends LinearOpMode {
         while (rightFront.isBusy() && leftFront.isBusy() && rightRear.isBusy() && leftRear.isBusy()) {
             //This block is so that nothing happens while this motors reach their target positions.
         }
+
+        rightFront.setPower(0);
+        leftFront.setPower(0);
+        rightRear.setPower(0);
+        leftRear.setPower(0);
 
     }
 
