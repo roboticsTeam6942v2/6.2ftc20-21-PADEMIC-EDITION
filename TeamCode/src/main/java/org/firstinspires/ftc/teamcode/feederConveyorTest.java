@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class feederConveyorTest extends LinearOpMode {
 
     double wheelSpeedAdapter = 0;
+    boolean bIsActive = false;
+    boolean bLock = false;
 
     private DcMotor leftFront;
     private DcMotor rightFront;
@@ -127,10 +129,16 @@ public class feederConveyorTest extends LinearOpMode {
                 grabbingRollerLeft.setPower(0);
             }
 
-            if(gamepad1.b) {
-                diskLauncher.setPower(0.5);
-            } else {
+            if(gamepad1.b && !bLock && !bIsActive) {
+                bLock = true;
+                bIsActive = true;
+                diskLauncher.setPower(1);
+            } else if(gamepad1.b && !bLock && bIsActive) {
+                bIsActive = false;
+                bLock = true;
                 diskLauncher.setPower(0.0);
+            } else if(!gamepad1.b && bLock) {
+                bLock = false;
             }
 
             /* (gamepad1.a) {
