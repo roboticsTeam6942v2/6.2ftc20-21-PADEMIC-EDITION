@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 //@Disabled
 @TeleOp
@@ -23,6 +24,7 @@ public class UltimateGoalTeleOp extends LinearOpMode {
     private DcMotor conveyor;
     private DcMotor grabbingRollerRight;
     private DcMotor grabbingRollerLeft;
+    Servo servo;
 
 
     @Override
@@ -34,6 +36,7 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");
         leftRear   = hardwareMap.get(DcMotor.class, "leftRear");
         rightRear  = hardwareMap.get(DcMotor.class, "rightRear");
+        servo      = hardwareMap.get(Servo.class, "servo");
 
         rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -53,6 +56,8 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
         grabbingRollerLeft = hardwareMap.get(DcMotor.class, "grabbingRollerLeft");
         grabbingRollerLeft.setDirection(DcMotorSimple.Direction.REVERSE);//swap with REVERSE if the motor goes the wrong way
+
+        servo.setPosition(1);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -123,7 +128,7 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
             // start the launching system when start is held, disable when it isn't
             if (gamepad1.start && !rollersRunning) {
-                diskLauncher.setPower(0.5);
+                diskLauncher.setPower(1);
                 conveyor.setPower(1);
                 launcherRunning=true;
             } else if (!gamepad1.start && !rollersRunning){
