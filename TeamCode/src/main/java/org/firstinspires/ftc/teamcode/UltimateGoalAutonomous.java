@@ -76,6 +76,9 @@ public class UltimateGoalAutonomous extends LinearOpMode {
         diskLauncher = hardwareMap.get(DcMotor.class, "diskLauncher");
         diskLauncher.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        telemetry.addData("Status;", " Initialized");
+        telemetry.update();
+
         waitForStart();
 
 
@@ -88,10 +91,12 @@ public class UltimateGoalAutonomous extends LinearOpMode {
             telemetry.addData("Heading", heading);
             telemetry.addData("Roll", roll);
             telemetry.addData("Pitch", pitch);
+            telemetry.addData("Status:", " Putting In Values");
             telemetry.update();
 
-            driveForward(4, 0.6);
+            driveForward(8, 0.6);
             turnRight(0.5, -90); //maybe it'll turn 90 degrees right?
+            strafeRight(5, 0.3);
 
         }
     }
@@ -116,6 +121,14 @@ public class UltimateGoalAutonomous extends LinearOpMode {
 
         while (rightFront.isBusy() && leftFront.isBusy() && rightRear.isBusy() && leftRear.isBusy()) {
             //This block is so that nothing happens while this motors reach their target positions.
+            telemetry.addData("Status:", " Running");
+            telemetry.addData("Motor:", speed);
+            telemetry.addData("leftFront", leftFront.getCurrentPosition());
+            telemetry.addData("rightFront", rightFront.getCurrentPosition());
+            telemetry.addData("leftRear", leftRear.getCurrentPosition());
+            telemetry.addData("rightRear", rightRear.getCurrentPosition());
+            telemetry.update();
+
         }
 
         rightFront.setPower(0);
@@ -125,13 +138,58 @@ public class UltimateGoalAutonomous extends LinearOpMode {
 
     }
 
+    public void strafeRight(int inches, double speed) {
+        int howMuch = (int) Math.round((inches / circumference) * tickCount);
+
+        rightFront.setTargetPosition(howMuch);
+        leftFront.setTargetPosition(howMuch);
+        rightRear.setTargetPosition(howMuch);
+        leftRear.setTargetPosition(howMuch);
+
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        rightFront.setPower(-speed);
+        leftFront.setPower(speed);
+        rightRear.setPower(speed);
+        leftRear.setPower(-speed);
+
+        while (rightFront.isBusy() && leftFront.isBusy() && rightRear.isBusy() && leftRear.isBusy()) {
+            //This block is so that nothing happens while this motors reach their target positions.
+            telemetry.addData("Status:", " Running");
+            telemetry.addData("Motor:", speed);
+            telemetry.addData("leftFront", leftFront.getCurrentPosition());
+            telemetry.addData("rightFront", rightFront.getCurrentPosition());
+            telemetry.addData("leftRear", leftRear.getCurrentPosition());
+            telemetry.addData("rightRear", rightRear.getCurrentPosition());
+            telemetry.update();
+
+        }
+
+        rightFront.setPower(0);
+        leftFront.setPower(0);
+        rightRear.setPower(0);
+        leftRear.setPower(0);
+    }
+
     public void turnRight(double speed, double wantedAngle) {
         rightFront.setPower(-speed);
         leftFront.setPower(speed);
         rightRear.setPower(-speed);
         leftRear.setPower(speed);
 
-        if (wantedAngle == angles.firstAngle) {
+        while (rightFront.isBusy() && leftFront.isBusy() && rightRear.isBusy() && leftRear.isBusy()) {
+            //This block is so that nothing happens while this motors reach their target positions.
+            telemetry.addData("Status:", " Running");
+            telemetry.addData("Motor:", speed);
+            telemetry.addData("Angle", angles.firstAngle);
+            telemetry.update();
+
+        }
+
+        if (wantedAngle >= (angles.firstAngle -= 10) && wantedAngle <= (angles.firstAngle += 10)) {
             rightFront.setPower(0);
             leftFront.setPower(0);
             rightRear.setPower(0);

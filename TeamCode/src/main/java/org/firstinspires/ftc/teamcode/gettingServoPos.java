@@ -21,7 +21,11 @@ public class gettingServoPos extends LinearOpMode {
             if (gamepad1.a) {
                 servoPos += 0.1;
                 servoPain.setPosition(servoPos);
+            }
 
+            if (gamepad1.b) {
+                servoPos -= 0.1;
+                servoPain.setPosition(servoPos);
             }
 
         }
