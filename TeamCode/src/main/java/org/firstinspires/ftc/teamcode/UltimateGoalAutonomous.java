@@ -87,7 +87,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
         waitForStart();
 
 
-        while (opModeIsActive()) {
+        /*while (opModeIsActive()) {
 
             if (driveFowardIsRunning == false && resetEncoders == false) {
                 rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -116,11 +116,15 @@ public class UltimateGoalAutonomous extends LinearOpMode {
             telemetry.addData("Status:", " Putting In Values");
             telemetry.update();
 
-            driveForward(8, 0.6);
+            driveForward(-8, 0.6);
             turnRight(0.5, -90); //maybe it'll turn 90 degrees right?
             strafeRight(5, 0.3);
 
-        }
+        }*/
+        driveForward(8, 0.6);
+        turnRight(0.5, -90); //maybe it'll turn 90 degrees right?
+        strafeRight(5, 0.3);
+
     }
 
     public void driveForward ( int inches, double speed){

@@ -16,9 +16,7 @@ public class gettingServoPos extends LinearOpMode {
         while(opModeIsActive()) {
             telemetry.addData("Servo Previous Position, ", servoPain.getPosition());
             telemetry.update();
-            double servoPos = 0;
-
-            servoPain.setPosition(0.5);
+            double servoPos = 0.5;
 
             if (gamepad1.a) {
                 servoPos += 0.1;
