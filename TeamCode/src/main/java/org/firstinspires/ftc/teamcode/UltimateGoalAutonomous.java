@@ -84,6 +84,11 @@ public class UltimateGoalAutonomous extends LinearOpMode {
         telemetry.addData("Status;", " Initialized");
         telemetry.update();
 
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        double heading = angles.firstAngle;
+        double roll = angles.secondAngle;
+        double pitch = angles.thirdAngle;
+
         waitForStart();
 
 
@@ -121,9 +126,9 @@ public class UltimateGoalAutonomous extends LinearOpMode {
             strafeRight(5, 0.3);
 
         }*/
-        driveForward(8, 0.6);
+        //driveForward(8, 0.6);
         turnRight(0.5, -90); //maybe it'll turn 90 degrees right?
-        strafeRight(5, 0.3);
+        //strafeRight(5, 0.3);
 
     }
 
