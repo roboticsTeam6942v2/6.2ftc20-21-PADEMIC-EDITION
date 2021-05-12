@@ -18,6 +18,8 @@ public class gettingServoPos extends LinearOpMode {
             telemetry.update();
             double servoPos = 0;
 
+            servoPain.setPosition(0.5);
+
             if (gamepad1.a) {
                 servoPos += 0.1;
                 servoPain.setPosition(servoPos);

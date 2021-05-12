@@ -127,11 +127,11 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             rightRear.setPower(speeds[3]- wheelSpeedAdapter);
 
             // start the launching system when start is held, disable when it isn't
-            if (gamepad1.start && !rollersRunning) {
+            if (gamepad1.a && !rollersRunning) {
                 diskLauncher.setPower(1);
                 conveyor.setPower(1);
                 launcherRunning=true;
-            } else if (!gamepad1.start && !rollersRunning){
+            } else if (!gamepad1.a && !rollersRunning){
                 diskLauncher.setPower(0);
                 conveyor.setPower(.0);
                 launcherRunning=false;

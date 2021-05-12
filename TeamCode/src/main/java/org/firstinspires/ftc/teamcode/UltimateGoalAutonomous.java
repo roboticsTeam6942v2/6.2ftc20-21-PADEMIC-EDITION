@@ -25,6 +25,11 @@ public class UltimateGoalAutonomous extends LinearOpMode {
 
     private BNO055IMU imu;
     private Orientation angles;
+    int ticksToTravel;
+    boolean driveFowardIsRunning = false;
+    boolean strafeRightIsRunning = false;
+    boolean resetEncoders = true;
+
 
     private final double diameter = 4;
     private final double tickCount = 1120;
@@ -83,6 +88,23 @@ public class UltimateGoalAutonomous extends LinearOpMode {
 
 
         while (opModeIsActive()) {
+
+            if (driveFowardIsRunning == false && resetEncoders == false) {
+                rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                resetEncoders = true;
+            }
+
+            if (strafeRightIsRunning == false && resetEncoders == false) {
+                rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                resetEncoders = true;
+            }
+
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             double heading = angles.firstAngle;
             double roll = angles.secondAngle;
@@ -102,12 +124,14 @@ public class UltimateGoalAutonomous extends LinearOpMode {
     }
 
     public void driveForward ( int inches, double speed){
-        int howMuch = (int) Math.round((inches / circumference) * tickCount);
+        ticksToTravel = (int) Math.round((inches / circumference) * tickCount);
 
-        rightFront.setTargetPosition(howMuch);
-        leftFront.setTargetPosition(howMuch);
-        rightRear.setTargetPosition(howMuch);
-        leftRear.setTargetPosition(howMuch);
+        driveFowardIsRunning=true;
+
+        rightFront.setTargetPosition(ticksToTravel);
+        leftFront.setTargetPosition(ticksToTravel);
+        rightRear.setTargetPosition(ticksToTravel);
+        leftRear.setTargetPosition(ticksToTravel);
 
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -130,21 +154,29 @@ public class UltimateGoalAutonomous extends LinearOpMode {
             telemetry.update();
 
         }
+        speed = 0;
 
-        rightFront.setPower(0);
-        leftFront.setPower(0);
-        rightRear.setPower(0);
-        leftRear.setPower(0);
+        rightFront.setPower(speed);
+        leftFront.setPower(speed);
+        rightRear.setPower(speed);
+        leftRear.setPower(speed);
+
+        resetEncoders=false;
+        driveFowardIsRunning=false;
+
+        sleep(1000);
 
     }
 
     public void strafeRight(int inches, double speed) {
-        int howMuch = (int) Math.round((inches / circumference) * tickCount);
+        ticksToTravel = (int) Math.round((inches / circumference) * tickCount);
 
-        rightFront.setTargetPosition(howMuch);
-        leftFront.setTargetPosition(howMuch);
-        rightRear.setTargetPosition(howMuch);
-        leftRear.setTargetPosition(howMuch);
+        strafeRightIsRunning=true;
+
+        rightFront.setTargetPosition(ticksToTravel);
+        leftFront.setTargetPosition(ticksToTravel);
+        rightRear.setTargetPosition(ticksToTravel);
+        leftRear.setTargetPosition(ticksToTravel);
 
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -168,13 +200,26 @@ public class UltimateGoalAutonomous extends LinearOpMode {
 
         }
 
-        rightFront.setPower(0);
-        leftFront.setPower(0);
-        rightRear.setPower(0);
-        leftRear.setPower(0);
+        speed = 0;
+
+        rightFront.setPower(speed);
+        leftFront.setPower(speed);
+        rightRear.setPower(speed);
+        leftRear.setPower(speed);
+
+        sleep(1000);
+
+        resetEncoders=false;
+        strafeRightIsRunning=false;
     }
 
     public void turnRight(double speed, double wantedAngle) {
+
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         rightFront.setPower(-speed);
         leftFront.setPower(speed);
         rightRear.setPower(-speed);
@@ -194,6 +239,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
             leftFront.setPower(0);
             rightRear.setPower(0);
             leftRear.setPower(0);
+
         }
 
     }
