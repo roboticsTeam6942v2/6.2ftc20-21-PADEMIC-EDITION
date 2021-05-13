@@ -243,7 +243,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
 
         }
 
-        if (wantedAngle >= (angles.firstAngle -= 10) && wantedAngle <= (angles.firstAngle += 10)) {
+        if (angles.firstAngle >= (wantedAngle -= 10) && angles.firstAngle <= (wantedAngle += 10)) {
             rightFront.setPower(0);
             leftFront.setPower(0);
             rightRear.setPower(0);
