@@ -84,15 +84,10 @@ public class UltimateGoalAutonomous extends LinearOpMode {
         telemetry.addData("Status;", " Initialized");
         telemetry.update();
 
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        double heading = angles.firstAngle;
-        double roll = angles.secondAngle;
-        double pitch = angles.thirdAngle;
-
         waitForStart();
 
 
-        /*while (opModeIsActive()) {
+        //while (opModeIsActive()) {
 
             if (driveFowardIsRunning == false && resetEncoders == false) {
                 rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -121,11 +116,11 @@ public class UltimateGoalAutonomous extends LinearOpMode {
             telemetry.addData("Status:", " Putting In Values");
             telemetry.update();
 
-            driveForward(-8, 0.6); //negative is to let it move backwards, does that but won't stop
+            //driveForward(10, 0.6); //negative is to let it move backwards, does that but won't stop
             turnRight(0.5, -90); //maybe it'll turn 90 degrees right?
-            strafeRight(5, 0.3); //positive to move right, negative for left
+            //strafeRight(5, 0.3); //positive to move right, negative for left
 
-        }*/
+        }
 
         /*testing out the encoders for each wheel, why tf are they all zero
         leftFront.setTargetPosition(1120);
@@ -141,10 +136,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
 
         leftFront.setPower(0);*/
 
-        //driveForward(8, 0.6);
-        turnRight(0.5, -90); //maybe it'll turn 90 degrees right?
-        //strafeRight(5, 0.3);
-    }
+    //}
 
 
     public void driveForward ( int inches, double speed){
@@ -258,15 +250,15 @@ public class UltimateGoalAutonomous extends LinearOpMode {
             telemetry.addData("Motor:", speed);
             telemetry.addData("Angle", angles.firstAngle);
             telemetry.update();
+            if (angles.firstAngle == wantedAngle) {
+                //makes sure that the robot doesn't overshoot the angle given
+                rightFront.setPower(0);
+                leftFront.setPower(0);
+                rightRear.setPower(0);
+                leftRear.setPower(0);
 
         }
 
-        if (angles.firstAngle > (wantedAngle -= 10) && angles.firstAngle < (wantedAngle += 10)) {
-            //makes sure that the robot doesn't overshoot the angle given
-            rightFront.setPower(0);
-            leftFront.setPower(0);
-            rightRear.setPower(0);
-            leftRear.setPower(0);
 
         }
 
