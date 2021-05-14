@@ -121,18 +121,34 @@ public class UltimateGoalAutonomous extends LinearOpMode {
             telemetry.addData("Status:", " Putting In Values");
             telemetry.update();
 
-            driveForward(-8, 0.6);
+            driveForward(-8, 0.6); //negative is to let it move backwards, does that but won't stop
             turnRight(0.5, -90); //maybe it'll turn 90 degrees right?
-            strafeRight(5, 0.3);
+            strafeRight(5, 0.3); //positive to move right, negative for left
 
         }*/
+
+        /*testing out the encoders for each wheel, why tf are they all zero
+        leftFront.setTargetPosition(1120);
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFront.setPower(1);
+
+        while (leftFront.isBusy()) {
+            //This block is so that nothing happens while this motors reach their target positions, also telemetry
+            telemetry.addData("Status:", " Running");
+            telemetry.addData("leftFront", leftFront.getCurrentPosition());
+            telemetry.update();
+        }
+
+        leftFront.setPower(0);*/
+
         //driveForward(8, 0.6);
         turnRight(0.5, -90); //maybe it'll turn 90 degrees right?
         //strafeRight(5, 0.3);
-
     }
 
+
     public void driveForward ( int inches, double speed){
+        //moving forward and backwards
         ticksToTravel = (int) Math.round((inches / circumference) * tickCount);
 
         driveFowardIsRunning=true;
@@ -153,7 +169,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
         leftRear.setPower(speed);
 
         while (rightFront.isBusy() && leftFront.isBusy() && rightRear.isBusy() && leftRear.isBusy()) {
-            //This block is so that nothing happens while this motors reach their target positions.
+            //This block is so that nothing happens while this motors reach their target positions, also telemetry
             telemetry.addData("Status:", " Running");
             telemetry.addData("Motor:", speed);
             telemetry.addData("leftFront", leftFront.getCurrentPosition());
@@ -178,6 +194,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
     }
 
     public void strafeRight(int inches, double speed) {
+        //moving right and left
         ticksToTravel = (int) Math.round((inches / circumference) * tickCount);
 
         strafeRightIsRunning=true;
@@ -198,7 +215,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
         leftRear.setPower(-speed);
 
         while (rightFront.isBusy() && leftFront.isBusy() && rightRear.isBusy() && leftRear.isBusy()) {
-            //This block is so that nothing happens while this motors reach their target positions.
+            //This block is so that nothing happens while this motors reach their target positions, also telemetry
             telemetry.addData("Status:", " Running");
             telemetry.addData("Motor:", speed);
             telemetry.addData("leftFront", leftFront.getCurrentPosition());
@@ -223,11 +240,12 @@ public class UltimateGoalAutonomous extends LinearOpMode {
     }
 
     public void turnRight(double speed, double wantedAngle) {
-
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //turning right and left
+        //for some reason move like 1 degree and then stops, don't know why
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         rightFront.setPower(-speed);
         leftFront.setPower(speed);
@@ -235,7 +253,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
         leftRear.setPower(speed);
 
         while (rightFront.isBusy() && leftFront.isBusy() && rightRear.isBusy() && leftRear.isBusy()) {
-            //This block is so that nothing happens while this motors reach their target positions.
+            //This block is so that nothing happens while this motors reach their target positions, also telemetry
             telemetry.addData("Status:", " Running");
             telemetry.addData("Motor:", speed);
             telemetry.addData("Angle", angles.firstAngle);
@@ -243,7 +261,8 @@ public class UltimateGoalAutonomous extends LinearOpMode {
 
         }
 
-        if (angles.firstAngle >= (wantedAngle -= 10) && angles.firstAngle <= (wantedAngle += 10)) {
+        if (angles.firstAngle > (wantedAngle -= 10) && angles.firstAngle < (wantedAngle += 10)) {
+            //makes sure that the robot doesn't overshoot the angle given
             rightFront.setPower(0);
             leftFront.setPower(0);
             rightRear.setPower(0);
