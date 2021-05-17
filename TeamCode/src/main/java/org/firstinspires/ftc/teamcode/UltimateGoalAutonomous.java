@@ -87,7 +87,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
         waitForStart();
 
 
-        //while (opModeIsActive()) {
+        while (opModeIsActive()) {
 
             if (driveFowardIsRunning == false && resetEncoders == false) {
                 rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -116,27 +116,29 @@ public class UltimateGoalAutonomous extends LinearOpMode {
             telemetry.addData("Status:", " Putting In Values");
             telemetry.update();
 
-            //driveForward(10, 0.6); //negative is to let it move backwards, does that but won't stop
-            turnRight(0.5, -90); //maybe it'll turn 90 degrees right?
+            driveForward(10, 0.6); //negative is to let it move backwards, does that but won't stop
+            //turnRight(0.5, -90); //maybe it'll turn 90 degrees right?
             //strafeRight(5, 0.3); //positive to move right, negative for left
 
+            /*leftFront.setTargetPosition(1120);
+            leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftFront.setPower(1);
+
+            while (leftFront.isBusy()) {
+                //This block is so that nothing happens while this motors reach their target positions, also telemetry
+                telemetry.addData("Status:", " Running");
+                telemetry.addData("leftFront", leftFront.getCurrentPosition());
+                telemetry.update();
+            }
+
+            leftFront.setPower(0);*/
+
         }
 
-        /*testing out the encoders for each wheel, why tf are they all zero
-        leftFront.setTargetPosition(1120);
-        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftFront.setPower(1);
+        //testing out the encoders for each wheel, why tf are they all zero
 
-        while (leftFront.isBusy()) {
-            //This block is so that nothing happens while this motors reach their target positions, also telemetry
-            telemetry.addData("Status:", " Running");
-            telemetry.addData("leftFront", leftFront.getCurrentPosition());
-            telemetry.update();
-        }
 
-        leftFront.setPower(0);*/
-
-    //}
+    }
 
 
     public void driveForward ( int inches, double speed){
