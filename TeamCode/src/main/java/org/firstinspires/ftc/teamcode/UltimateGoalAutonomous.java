@@ -89,7 +89,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            if (driveFowardIsRunning == false && resetEncoders == false) {
+            /*if (driveFowardIsRunning == false && resetEncoders == false) {
                 rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -103,7 +103,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
                 rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 resetEncoders = true;
-            }
+            }*/
 
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             double heading = angles.firstAngle;
@@ -116,9 +116,9 @@ public class UltimateGoalAutonomous extends LinearOpMode {
             telemetry.addData("Status:", " Putting In Values");
             telemetry.update();
 
-            driveForward(10, 0.6); //negative is to let it move backwards, does that but won't stop
+            //driveForward(24, 0.6); //negative is to let it move backwards, does that but won't stop
             //turnRight(0.5, -90); //maybe it'll turn 90 degrees right?
-            //strafeRight(5, 0.3); //positive to move right, negative for left
+            strafeRight(15, 0.5); //positive to move right, negative for left
 
             /*leftFront.setTargetPosition(1120);
             leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -193,10 +193,10 @@ public class UltimateGoalAutonomous extends LinearOpMode {
 
         strafeRightIsRunning=true;
 
-        rightFront.setTargetPosition(ticksToTravel);
+        rightFront.setTargetPosition(-ticksToTravel);
         leftFront.setTargetPosition(ticksToTravel);
         rightRear.setTargetPosition(ticksToTravel);
-        leftRear.setTargetPosition(ticksToTravel);
+        leftRear.setTargetPosition(-ticksToTravel);
 
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -210,7 +210,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
 
         while (rightFront.isBusy() && leftFront.isBusy() && rightRear.isBusy() && leftRear.isBusy()) {
             //This block is so that nothing happens while this motors reach their target positions, also telemetry
-            telemetry.addData("Status:", " Running");
+            telemetry.addData("Status:", " Running: Strafe");
             telemetry.addData("Motor:", speed);
             telemetry.addData("leftFront", leftFront.getCurrentPosition());
             telemetry.addData("rightFront", rightFront.getCurrentPosition());
