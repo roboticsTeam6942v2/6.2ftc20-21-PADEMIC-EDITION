@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp
 public class gettingServoPos extends LinearOpMode {
     private Servo servoPain;
+    double servoPos = 0.0;
 
     @Override
     public void runOpMode() {
@@ -16,15 +17,22 @@ public class gettingServoPos extends LinearOpMode {
         while(opModeIsActive()) {
             telemetry.addData("Servo Previous Position, ", servoPain.getPosition());
             telemetry.update();
-            double servoPos = 0.5;
 
             if (gamepad1.a) {
+               //double plus = servoPos + 0.1;
+                //servoPos += 0.1;
+                servoPain.setPosition(servoPos);
                 servoPos += 0.1;
+            } else  {
                 servoPain.setPosition(servoPos);
             }
 
             if (gamepad1.b) {
+                //double minus = servoPos - 0.1;
+                //servoPos -= 0.1;
+                servoPain.setPosition(servoPos);
                 servoPos -= 0.1;
+            } else {
                 servoPain.setPosition(servoPos);
             }
 

@@ -14,6 +14,8 @@ public class UltimateGoalTeleOp extends LinearOpMode {
     boolean launcherRunning  = false;
     double wheelSpeedAdapter = 0;
     boolean rollersRunning   = false;
+    boolean bIsActive = false;
+    boolean bLock = false;
 
     //Declaring the motors
     private DcMotor leftFront;
@@ -127,7 +129,7 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             rightRear.setPower(speeds[3]- wheelSpeedAdapter);
 
             // start the launching system when start is held, disable when it isn't
-            if (gamepad1.a && !rollersRunning) {
+            /*if (gamepad1.a && !rollersRunning) {
                 diskLauncher.setPower(1);
                 conveyor.setPower(1);
                 launcherRunning=true;
@@ -152,8 +154,31 @@ public class UltimateGoalTeleOp extends LinearOpMode {
                 rollersRunning=false;
             }
             telemetry.addData("Rollers Active?: ", rollersRunning);
-            telemetry.update();
+            telemetry.update();*/
 
+            if (gamepad1.a) {
+
+                conveyor.setPower(1);
+                grabbingRollerRight.setPower(1);
+                grabbingRollerLeft.setPower(1);
+
+            } else {
+                conveyor.setPower(0);
+                grabbingRollerRight.setPower(0);
+                grabbingRollerLeft.setPower(0);
+            }
+
+            if(gamepad1.b && !bLock && !bIsActive) {
+                bLock = true;
+                bIsActive = true;
+                diskLauncher.setPower(1);
+            } else if(gamepad1.b && !bLock && bIsActive) {
+                bIsActive = false;
+                bLock = true;
+                diskLauncher.setPower(0.0);
+            } else if(!gamepad1.b && bLock) {
+                bLock = false;
+            }
 
             }
         }

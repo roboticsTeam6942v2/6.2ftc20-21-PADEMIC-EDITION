@@ -89,7 +89,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            /*if (driveFowardIsRunning == false && resetEncoders == false) {
+            if (driveFowardIsRunning == false && resetEncoders == false) {
                 rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -116,11 +116,13 @@ public class UltimateGoalAutonomous extends LinearOpMode {
             telemetry.addData("Status:", " Putting In Values");
             telemetry.update();
 
-            driveForward(10, 0.6); //negative is to let it move backwards, does that but won't stop
+            driveForward(25, 0.6); //negative is to let it move backwards, does that but won't stop
             //turnRight(0.5, -90); //maybe it'll turn 90 degrees right?
-            //strafeRight(5, 0.3); //positive to move right, negative for left*/
+            strafeRight(15, 0.6); //positive to move right, negative for left
 
-            leftRear.setTargetPosition(1120);
+            sleep(5000);
+
+            /*leftRear.setTargetPosition(1120);
             leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             leftRear.setPower(1);
 
@@ -140,7 +142,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
             }
 
             leftRear.setPower(0);
-            rightRear.setPower(0);
+            rightRear.setPower(0);*/
 
         }
 
@@ -148,7 +150,8 @@ public class UltimateGoalAutonomous extends LinearOpMode {
 
     public void driveForward ( int inches, double speed){
         //moving forward and backwards
-        ticksToTravel = (int) Math.round((inches / circumference) * tickCount);
+        //ticksToTravel = (int) Math.round((inches / circumference) * tickCount);
+        ticksToTravel = (int) Math.round((tickCount/circumference)*inches);
 
         driveFowardIsRunning=true;
 
@@ -188,30 +191,34 @@ public class UltimateGoalAutonomous extends LinearOpMode {
         resetEncoders=false;
         driveFowardIsRunning=false;
 
-        sleep(1000);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
     }
 
     public void strafeRight(int inches, double speed) {
         //moving right and left
-        ticksToTravel = (int) Math.round((inches / circumference) * tickCount);
+        //ticksToTravel = (int) Math.round((inches / circumference) * tickCount);
+        ticksToTravel = (int) Math.round((tickCount/circumference)*inches);
 
         strafeRightIsRunning=true;
 
-        rightFront.setTargetPosition(ticksToTravel);
+        rightFront.setTargetPosition(-ticksToTravel);
         leftFront.setTargetPosition(ticksToTravel);
         rightRear.setTargetPosition(ticksToTravel);
-        leftRear.setTargetPosition(ticksToTravel);
-
+        leftRear.setTargetPosition(-ticksToTravel);
+        //Then perish
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        rightFront.setPower(-speed);
+        rightFront.setPower(speed);
         leftFront.setPower(speed);
         rightRear.setPower(speed);
-        leftRear.setPower(-speed);
+        leftRear.setPower(speed);
 
         while (rightFront.isBusy() && leftFront.isBusy() && rightRear.isBusy() && leftRear.isBusy()) {
             //This block is so that nothing happens while this motors reach their target positions, also telemetry
@@ -232,7 +239,10 @@ public class UltimateGoalAutonomous extends LinearOpMode {
         rightRear.setPower(speed);
         leftRear.setPower(speed);
 
-        sleep(1000);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         resetEncoders=false;
         strafeRightIsRunning=false;
