@@ -89,7 +89,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            if (driveFowardIsRunning == false && resetEncoders == false) {
+            /*if (driveFowardIsRunning == false && resetEncoders == false) {
                 rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -118,28 +118,33 @@ public class UltimateGoalAutonomous extends LinearOpMode {
 
             driveForward(10, 0.6); //negative is to let it move backwards, does that but won't stop
             //turnRight(0.5, -90); //maybe it'll turn 90 degrees right?
-            //strafeRight(5, 0.3); //positive to move right, negative for left
+            //strafeRight(5, 0.3); //positive to move right, negative for left*/
 
-            /*leftFront.setTargetPosition(1120);
-            leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            leftFront.setPower(1);
+            leftRear.setTargetPosition(1120);
+            leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftRear.setPower(1);
 
-            while (leftFront.isBusy()) {
+            //1120*0.048425=54 multiplied+equation average
+            //1120*0.01325=15 multiplied average
+            //1120*0.0836=94 equation average
+            rightRear.setTargetPosition(1120);
+            rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightRear.setPower(1);
+
+            while (leftRear.isBusy() && rightRear.isBusy()) {
                 //This block is so that nothing happens while this motors reach their target positions, also telemetry
                 telemetry.addData("Status:", " Running");
-                telemetry.addData("leftFront", leftFront.getCurrentPosition());
+                telemetry.addData("rightRear", rightRear.getCurrentPosition());
+                telemetry.addData("leftRear", leftRear.getCurrentPosition());
                 telemetry.update();
             }
 
-            leftFront.setPower(0);*/
+            leftRear.setPower(0);
+            rightRear.setPower(0);
 
         }
 
-        //testing out the encoders for each wheel, why tf are they all zero
-
-
     }
-
 
     public void driveForward ( int inches, double speed){
         //moving forward and backwards
@@ -252,15 +257,15 @@ public class UltimateGoalAutonomous extends LinearOpMode {
             telemetry.addData("Motor:", speed);
             telemetry.addData("Angle", angles.firstAngle);
             telemetry.update();
-            if (angles.firstAngle == wantedAngle) {
-                //makes sure that the robot doesn't overshoot the angle given
-                rightFront.setPower(0);
-                leftFront.setPower(0);
-                rightRear.setPower(0);
-                leftRear.setPower(0);
 
         }
 
+        if (angles.firstAngle == wantedAngle) {
+            //makes sure that the robot doesn't overshoot the angle given
+            rightFront.setPower(0);
+            leftFront.setPower(0);
+            rightRear.setPower(0);
+            leftRear.setPower(0);
 
         }
 
