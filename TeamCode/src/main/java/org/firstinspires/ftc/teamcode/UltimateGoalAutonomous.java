@@ -81,7 +81,16 @@ public class UltimateGoalAutonomous extends LinearOpMode {
         diskLauncher = hardwareMap.get(DcMotor.class, "diskLauncher");
         diskLauncher.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        telemetry.addData("Status;", " Initialized");
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        double heading = angles.firstAngle;
+        double roll = angles.secondAngle;
+        double pitch = angles.thirdAngle;
+
+        telemetry.addData("Status:", " Initialized");
+        telemetry.addData("Heading", heading);
+        telemetry.addData("Roll", roll);
+        telemetry.addData("Pitch", pitch);
+        telemetry.addData("Status:", " Putting In Values");
         telemetry.update();
 
         waitForStart();
@@ -105,20 +114,15 @@ public class UltimateGoalAutonomous extends LinearOpMode {
                 resetEncoders = true;
             }
 
-            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            double heading = angles.firstAngle;
-            double roll = angles.secondAngle;
-            double pitch = angles.thirdAngle;
-
             telemetry.addData("Heading", heading);
             telemetry.addData("Roll", roll);
             telemetry.addData("Pitch", pitch);
             telemetry.addData("Status:", " Putting In Values");
             telemetry.update();
 
-            driveForward(25, 0.6); //negative is to let it move backwards, does that but won't stop
-            //turnRight(0.5, -90); //maybe it'll turn 90 degrees right?
-            strafeRight(15, 0.6); //positive to move right, negative for left
+            //driveForward(25, 0.6); //negative is to let it move backwards, does that but won't stop
+            turnRight(0.6, 90); //maybe it'll turn 90 degrees right?
+            //strafeRight(15, 0.6); //positive to move right, negative for left
 
             sleep(5000);
 
@@ -174,6 +178,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
             //This block is so that nothing happens while this motors reach their target positions, also telemetry
             telemetry.addData("Status:", " Running");
             telemetry.addData("Motor:", speed);
+            telemetry.addData("Angle", angles.firstAngle);
             telemetry.addData("leftFront", leftFront.getCurrentPosition());
             telemetry.addData("rightFront", rightFront.getCurrentPosition());
             telemetry.addData("leftRear", leftRear.getCurrentPosition());
@@ -224,6 +229,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
             //This block is so that nothing happens while this motors reach their target positions, also telemetry
             telemetry.addData("Status:", " Running");
             telemetry.addData("Motor:", speed);
+            telemetry.addData("Angle", angles.firstAngle);
             telemetry.addData("leftFront", leftFront.getCurrentPosition());
             telemetry.addData("rightFront", rightFront.getCurrentPosition());
             telemetry.addData("leftRear", leftRear.getCurrentPosition());
@@ -265,17 +271,23 @@ public class UltimateGoalAutonomous extends LinearOpMode {
             //This block is so that nothing happens while this motors reach their target positions, also telemetry
             telemetry.addData("Status:", " Running");
             telemetry.addData("Motor:", speed);
-            telemetry.addData("Angle", angles.firstAngle);
+            telemetry.addData("turning right/left", "right now");
+            //telemetry.addData("Angle", angles.firstAngle);
+            telemetry.addData("Heading", angles.firstAngle);
+            telemetry.addData("Roll", angles.secondAngle);
+            telemetry.addData("Pitch", angles.thirdAngle);
             telemetry.update();
 
         }
 
         if (angles.firstAngle == wantedAngle) {
             //makes sure that the robot doesn't overshoot the angle given
-            rightFront.setPower(0);
-            leftFront.setPower(0);
-            rightRear.setPower(0);
-            leftRear.setPower(0);
+            speed = 0;
+
+            rightFront.setPower(speed);
+            leftFront.setPower(speed);
+            rightRear.setPower(speed);
+            leftRear.setPower(speed);
 
         }
 
