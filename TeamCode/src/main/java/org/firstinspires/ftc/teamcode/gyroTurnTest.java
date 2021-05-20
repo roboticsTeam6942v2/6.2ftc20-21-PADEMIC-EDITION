@@ -77,12 +77,12 @@ public class gyroTurnTest extends LinearOpMode {
         diskLauncher = hardwareMap.get(DcMotor.class, "diskLauncher");
         diskLauncher.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        waitForStart();
-
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double heading = angles.firstAngle;
         double roll = angles.secondAngle;
         double pitch = angles.thirdAngle;
+
+        waitForStart();
 
         telemetry.addData("Status:", " Initialized");
         telemetry.addData("Heading", heading);
@@ -91,8 +91,8 @@ public class gyroTurnTest extends LinearOpMode {
         telemetry.addData("Status:", " Putting In Values");
         telemetry.update();
 
-        turnRightEncoder(-90, 0.6);
-        //turnRightGyro(-90, 0.6);
+        //turnRightEncoder(-90, 0.6);
+        turnRightGyro(-90, 0.6);
 
     }
 
@@ -111,7 +111,8 @@ public class gyroTurnTest extends LinearOpMode {
             telemetry.addData("turnRightGyro", "going");
             telemetry.addData("Angle", angles.firstAngle);
             telemetry.update();
-            if (whatAngle == angles.firstAngle) ;
+        }
+        if (whatAngle == angles.firstAngle) {
             speed = 0;
             rightFront.setPower(speed);
             leftFront.setPower(speed);
@@ -123,9 +124,9 @@ public class gyroTurnTest extends LinearOpMode {
     private void turnRightEncoder(int whatAngle, double speed) {
         ticksToTravel = (int) Math.round((tickCount / circumference) * whatAngle);
 
-        rightFront.setTargetPosition(ticksToTravel);
+        rightFront.setTargetPosition(-ticksToTravel);
         leftFront.setTargetPosition(ticksToTravel);
-        rightRear.setTargetPosition(ticksToTravel);
+        rightRear.setTargetPosition(-ticksToTravel);
         leftRear.setTargetPosition(ticksToTravel);
 
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -133,14 +134,18 @@ public class gyroTurnTest extends LinearOpMode {
         rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        rightFront.setPower(-speed);
+        rightFront.setPower(speed);
         leftFront.setPower(speed);
-        rightRear.setPower(-speed);
+        rightRear.setPower(speed);
         leftRear.setPower(speed);
 
         while (rightFront.isBusy() && leftFront.isBusy() && rightRear.isBusy() && leftRear.isBusy()) {
             telemetry.addData("turnRightEncoder", "going");
             telemetry.addData("Angle", angles.firstAngle);
+            telemetry.addData("leftFront", leftFront.getCurrentPosition());
+            telemetry.addData("rightFront", rightFront.getCurrentPosition());
+            telemetry.addData("leftRear", leftRear.getCurrentPosition());
+            telemetry.addData("rightRear", rightRear.getCurrentPosition());
             telemetry.update();
         }
         speed = 0;
