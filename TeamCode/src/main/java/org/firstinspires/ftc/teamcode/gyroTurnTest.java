@@ -89,6 +89,7 @@ public class gyroTurnTest extends LinearOpMode {
         telemetry.addData("Roll", roll);
         telemetry.addData("Pitch", pitch);
         telemetry.addData("Status:", " Putting In Values");
+        telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
         telemetry.update();
 
         //turnRightEncoder(-90, 0.6);
@@ -102,10 +103,18 @@ public class gyroTurnTest extends LinearOpMode {
         rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        rightFront.setPower(-speed);
-        leftFront.setPower(speed);
-        rightRear.setPower(-speed);
-        leftRear.setPower(speed);
+        if(whatAngle > 0){
+            rightFront.setPower(speed);
+            leftFront.setPower(-speed);
+            rightRear.setPower(speed);
+            leftRear.setPower(-speed);
+        }
+        else if(whatAngle < 0){
+            rightFront.setPower(-speed);
+            leftFront.setPower(speed);
+            rightRear.setPower(-speed);
+            leftRear.setPower(speed);
+        }
 
         while (rightFront.isBusy() && leftFront.isBusy() && rightRear.isBusy() && leftRear.isBusy()) {
             telemetry.addData("turnRightGyro", "going");

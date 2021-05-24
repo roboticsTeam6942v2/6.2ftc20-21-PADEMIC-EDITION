@@ -91,6 +91,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
         telemetry.addData("Roll", roll);
         telemetry.addData("Pitch", pitch);
         telemetry.addData("Status:", " Putting In Values");
+        telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
         telemetry.update();
 
         waitForStart();
