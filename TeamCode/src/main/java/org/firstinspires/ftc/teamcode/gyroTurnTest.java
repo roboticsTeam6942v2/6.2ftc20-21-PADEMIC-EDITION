@@ -77,23 +77,25 @@ public class gyroTurnTest extends LinearOpMode {
         diskLauncher = hardwareMap.get(DcMotor.class, "diskLauncher");
         diskLauncher.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        telemetry.addData("Status:", " Putting In Values");
+        telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
+        telemetry.update();
+
+        waitForStart();
+
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double heading = angles.firstAngle;
         double roll = angles.secondAngle;
         double pitch = angles.thirdAngle;
 
-        waitForStart();
-
         telemetry.addData("Status:", " Initialized");
         telemetry.addData("Heading", heading);
         telemetry.addData("Roll", roll);
         telemetry.addData("Pitch", pitch);
-        telemetry.addData("Status:", " Putting In Values");
-        telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
         telemetry.update();
 
         //turnRightEncoder(-90, 0.6);
-        turnRightGyro(-90, 0.6);
+        turnRightGyro(90, 0.6);
 
     }
 
@@ -120,14 +122,15 @@ public class gyroTurnTest extends LinearOpMode {
             telemetry.addData("turnRightGyro", "going");
             telemetry.addData("Angle", angles.firstAngle);
             telemetry.update();
+            if (whatAngle == angles.firstAngle) {
+                speed = 0;
+                rightFront.setPower(speed);
+                leftFront.setPower(speed);
+                rightRear.setPower(speed);
+                leftRear.setPower(speed);
+            }
         }
-        if (whatAngle == angles.firstAngle) {
-            speed = 0;
-            rightFront.setPower(speed);
-            leftFront.setPower(speed);
-            rightRear.setPower(speed);
-            leftRear.setPower(speed);
-        }
+
     }
 
     private void turnRightEncoder(int whatAngle, double speed) {
