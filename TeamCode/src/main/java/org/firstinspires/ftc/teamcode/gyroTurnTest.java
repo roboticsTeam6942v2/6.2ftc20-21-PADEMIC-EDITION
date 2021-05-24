@@ -117,10 +117,12 @@ public class gyroTurnTest extends LinearOpMode {
             rightRear.setPower(-speed);
             leftRear.setPower(speed);
         }
-
-        while (rightFront.isBusy() && leftFront.isBusy() && rightRear.isBusy() && leftRear.isBusy()) {
+        while (!isStopRequested()) {
             telemetry.addData("turnRightGyro", "going");
             telemetry.addData("Angle", angles.firstAngle);
+            telemetry.addData("Heading", angles.firstAngle);
+            telemetry.addData("Roll", angles.secondAngle);
+            telemetry.addData("Pitch", angles.thirdAngle);
             telemetry.update();
             if (whatAngle == angles.firstAngle) {
                 speed = 0;
@@ -130,6 +132,11 @@ public class gyroTurnTest extends LinearOpMode {
                 leftRear.setPower(speed);
             }
         }
+        /*while (rightFront.isBusy() && leftFront.isBusy() && rightRear.isBusy() && leftRear.isBusy()) {
+            telemetry.addData("turnRightGyro", "going");
+            telemetry.addData("Angle", angles.firstAngle);
+            telemetry.update();
+        }*/
 
     }
 
