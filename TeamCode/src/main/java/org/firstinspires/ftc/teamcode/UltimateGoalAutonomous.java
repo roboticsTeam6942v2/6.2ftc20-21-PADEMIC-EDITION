@@ -81,23 +81,15 @@ public class UltimateGoalAutonomous extends LinearOpMode {
         diskLauncher = hardwareMap.get(DcMotor.class, "diskLauncher");
         diskLauncher.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        double heading = angles.firstAngle;
-        double roll = angles.secondAngle;
-        double pitch = angles.thirdAngle;
-
-        telemetry.addData("Status:", " Initialized");
-        telemetry.addData("Heading", heading);
-        telemetry.addData("Roll", roll);
-        telemetry.addData("Pitch", pitch);
-        telemetry.addData("Status:", " Putting In Values");
-        telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
-        telemetry.update();
-
         waitForStart();
 
 
         while (opModeIsActive()) {
+
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            double heading = angles.firstAngle;
+            double roll = angles.secondAngle;
+            double pitch = angles.thirdAngle;
 
             if (driveFowardIsRunning == false && resetEncoders == false) {
                 rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -121,9 +113,9 @@ public class UltimateGoalAutonomous extends LinearOpMode {
             telemetry.addData("Status:", " Putting In Values");
             telemetry.update();
 
-            //driveForward(25, 0.6); //negative is to let it move backwards, does that but won't stop
-            turnRight(0.6, 90); //maybe it'll turn 90 degrees right?
-            //strafeRight(15, 0.6); //positive to move right, negative for left
+            driveForward(25, 0.6); //negative is to let it move backwards, does that but won't stop
+            turnRight(90, 0.3); //maybe it'll turn 90 degrees right?
+            strafeRight(15, 0.6); //positive to move right, negative for left
 
             sleep(5000);
 
@@ -255,43 +247,57 @@ public class UltimateGoalAutonomous extends LinearOpMode {
         strafeRightIsRunning=false;
     }
 
-    public void turnRight(double speed, double wantedAngle) {
-        //turning right and left
-        //for some reason move like 1 degree and then stops, don't know why
-        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    public void turnRight(double whatAngle, double speed) {
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        rightFront.setPower(-speed);
+        if (whatAngle > 0) {
+
+            while(angles.firstAngle < whatAngle-10){
+
+                rightFront.setPower(speed);
+                leftFront.setPower(-speed);
+                rightRear.setPower(speed);
+                leftRear.setPower(-speed);
+                gyroCalibrate();
+
+                //break;
+
+            }
+        } else if(whatAngle < 0) {
+
+            while (angles.firstAngle > whatAngle+10){
+
+                rightFront.setPower(-speed);
+                leftFront.setPower(speed);
+                rightRear.setPower(-speed);
+                leftRear.setPower(speed);
+                gyroCalibrate();
+
+                //break;
+
+            }
+        }
+        speed = 0;
+        rightFront.setPower(speed);
         leftFront.setPower(speed);
-        rightRear.setPower(-speed);
+        rightRear.setPower(speed);
         leftRear.setPower(speed);
 
-        while (rightFront.isBusy() && leftFront.isBusy() && rightRear.isBusy() && leftRear.isBusy()) {
-            //This block is so that nothing happens while this motors reach their target positions, also telemetry
-            telemetry.addData("Status:", " Running");
-            telemetry.addData("Motor:", speed);
-            telemetry.addData("turning right/left", "right now");
-            //telemetry.addData("Angle", angles.firstAngle);
-            telemetry.addData("Heading", angles.firstAngle);
-            telemetry.addData("Roll", angles.secondAngle);
-            telemetry.addData("Pitch", angles.thirdAngle);
-            telemetry.update();
+    }
+    private void gyroCalibrate() {
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        double heading = angles.firstAngle;
+        double roll = angles.secondAngle;
+        double pitch = angles.thirdAngle;
 
-        }
-
-        if (angles.firstAngle == wantedAngle) {
-            //makes sure that the robot doesn't overshoot the angle given
-            speed = 0;
-
-            rightFront.setPower(speed);
-            leftFront.setPower(speed);
-            rightRear.setPower(speed);
-            leftRear.setPower(speed);
-
-        }
-
+        telemetry.addData("Status:", " Initialized");
+        telemetry.addData("Heading", heading);
+        telemetry.addData("Roll", roll);
+        telemetry.addData("Pitch", pitch);
+        telemetry.update();
     }
 
 }
