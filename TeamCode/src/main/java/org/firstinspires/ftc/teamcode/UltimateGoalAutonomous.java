@@ -113,8 +113,8 @@ public class UltimateGoalAutonomous extends LinearOpMode {
             telemetry.addData("Status:", " Putting In Values");
             telemetry.update();
 
-            driveForward(25, 0.6); //negative is to let it move backwards, does that but won't stop
-            turnRight(90, 0.3); //maybe it'll turn 90 degrees right?
+            //driveForward(25, 0.6); //negative is to let it move backwards, does that but won't stop
+            //turnRight(90, 0.3); //maybe it'll turn 90 degrees right?
             strafeRight(15, 0.6); //positive to move right, negative for left
 
             sleep(5000);
