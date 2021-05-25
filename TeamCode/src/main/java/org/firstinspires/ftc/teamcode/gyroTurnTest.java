@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -22,6 +23,8 @@ public class gyroTurnTest extends LinearOpMode {
     private DcMotor grabbingRollerRight;
     private DcMotor grabbingRollerLeft;
     private DcMotor diskLauncher;
+    boolean strafeRightIsRunning = false;
+    boolean resetEncoders = true;
 
     private BNO055IMU imu;
     private Orientation angles;
@@ -94,6 +97,7 @@ public class gyroTurnTest extends LinearOpMode {
 
             //turnRightEncoder(-90, 0.6);
             turnRightGyro(90, 0.3);
+            strafeRight(20, 0.5);
 
             sleep(5000);
         }
@@ -216,4 +220,57 @@ public class gyroTurnTest extends LinearOpMode {
         leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
     }
+
+    public void strafeRight(int inches, double speed) {
+        //moving right and left
+        //ticksToTravel = (int) Math.round((inches / circumference) * tickCount);
+        ticksToTravel = (int) Math.round((tickCount/circumference)*inches);
+
+        strafeRightIsRunning=true;
+
+        rightFront.setTargetPosition(-ticksToTravel);
+        leftFront.setTargetPosition(ticksToTravel);
+        rightRear.setTargetPosition(ticksToTravel);
+        leftRear.setTargetPosition(-ticksToTravel);
+        //Then perish <--- my heart ;-;
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        rightFront.setPower(speed);
+        leftFront.setPower(speed);
+        rightRear.setPower(speed);
+        leftRear.setPower(speed);
+
+
+        /*while (rightFront.isBusy() && leftFront.isBusy() && rightRear.isBusy() && leftRear.isBusy()) {
+            //This block is so that nothing happens while this motors reach their target positions, also telemetry
+            telemetry.addData("Status:", " Running");
+            telemetry.addData("Motor:", speed);
+            telemetry.addData("Angle", angles.firstAngle);
+            telemetry.addData("leftFront", leftFront.getCurrentPosition());
+            telemetry.addData("rightFront", rightFront.getCurrentPosition());
+            telemetry.addData("leftRear", leftRear.getCurrentPosition());
+            telemetry.addData("rightRear", rightRear.getCurrentPosition());
+            telemetry.update();
+
+        }*/
+
+        speed = 0;
+
+        rightFront.setPower(speed);
+        leftFront.setPower(speed);
+        rightRear.setPower(speed);
+        leftRear.setPower(speed);
+
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        resetEncoders=false;
+        strafeRightIsRunning=false;
+    }
+
 }
