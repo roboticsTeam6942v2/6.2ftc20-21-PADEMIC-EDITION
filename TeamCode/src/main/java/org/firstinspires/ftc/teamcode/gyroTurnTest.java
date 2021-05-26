@@ -144,8 +144,6 @@ public class gyroTurnTest extends LinearOpMode {
         rightRear.setPower(speed);
         leftRear.setPower(speed);
 
-
-
         /*while (!isStopRequested()) {
             telemetry.addData("turnRightGyro", "going");
             telemetry.addData("Angle", angles.firstAngle);
@@ -243,6 +241,14 @@ public class gyroTurnTest extends LinearOpMode {
         rightRear.setPower(speed);
         leftRear.setPower(speed);
 
+        if (leftFront.getCurrentPosition() == ticksToTravel || rightRear.getCurrentPosition() == ticksToTravel) {
+            speed = 0;
+
+            rightFront.setPower(speed);
+            leftFront.setPower(speed);
+            rightRear.setPower(speed);
+            leftRear.setPower(speed);
+        }
 
         /*while (rightFront.isBusy() && leftFront.isBusy() && rightRear.isBusy() && leftRear.isBusy()) {
             //This block is so that nothing happens while this motors reach their target positions, also telemetry
@@ -255,14 +261,14 @@ public class gyroTurnTest extends LinearOpMode {
             telemetry.addData("rightRear", rightRear.getCurrentPosition());
             telemetry.update();
 
-        }*/
+        }
 
         speed = 0;
 
         rightFront.setPower(speed);
         leftFront.setPower(speed);
         rightRear.setPower(speed);
-        leftRear.setPower(speed);
+        leftRear.setPower(speed);*/
 
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
