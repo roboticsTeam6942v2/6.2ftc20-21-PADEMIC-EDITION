@@ -29,6 +29,10 @@ public class gyroTurnTest extends LinearOpMode {
     private BNO055IMU imu;
     private Orientation angles;
     int ticksToTravel;
+    PIDController pidRotate, pidDrive;
+    private double globalAngle, correction, rotation;
+    Orientation lastAngles = new Orientation();
+    private double power = 0.3;
 
     private final double diameter = 4;
     private final double tickCount = 1120;
@@ -80,14 +84,35 @@ public class gyroTurnTest extends LinearOpMode {
         diskLauncher = hardwareMap.get(DcMotor.class, "diskLauncher");
         diskLauncher.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        pidRotate = new PIDController(.003, .00003, 0);
+        pidDrive = new PIDController(.05, 0, 0);
+
         telemetry.addData("Status:", " Putting In Values");
         telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
         telemetry.update();
 
         waitForStart();
 
+        /*pidDrive.setSetpoint(0);
+        pidDrive.setOutputRange(0, 0.6);
+        pidDrive.setInputRange(-90, 90);
+        pidDrive.enable();*/
+
 
         while (opModeIsActive()) {
+
+            correction = pidDrive.performPID(getAngle());
+
+            telemetry.addData("1 imu heading", lastAngles.firstAngle);
+            telemetry.addData("2 global heading", globalAngle);
+            telemetry.addData("3 correction", correction);
+            telemetry.addData("4 turn rotation", rotation);
+            telemetry.update();
+
+            rightFront.setPower(power + correction);
+            leftFront.setPower(power - correction);
+            rightRear.setPower(power + correction);
+            leftRear.setPower(power - correction);
 
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             double heading = angles.firstAngle;
@@ -96,8 +121,15 @@ public class gyroTurnTest extends LinearOpMode {
 
 
             //turnRightEncoder(-90, 0.6);
-            turnRightGyro(90, 0.3);
-            strafeRight(20, 0.5);
+            turnRightGyro(90, power);
+            turnRightGyro(-90, power);
+            turnRightGyro(45, power);
+            //strafeRight(20, 0.5);
+
+            rightFront.setPower(0);
+            leftFront.setPower(0);
+            rightRear.setPower(0);
+            leftRear.setPower(0);
 
             sleep(5000);
         }
@@ -106,12 +138,51 @@ public class gyroTurnTest extends LinearOpMode {
     }
 
     private void turnRightGyro(double whatAngle, double speed) {
+
+        resetAngle();
+
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        if (whatAngle > 0) {
+        if (Math.abs(whatAngle) > 359) whatAngle = (int) Math.copySign(359, whatAngle);
+
+        pidRotate.reset();
+        pidRotate.setSetpoint(whatAngle);
+        pidRotate.setInputRange(0, whatAngle);
+        pidRotate.setOutputRange(0, speed);
+        pidRotate.setTolerance(1);
+        pidRotate.enable();
+
+        if (whatAngle < 0) {
+
+            while(opModeIsActive() && getAngle() == 0) {
+                rightFront.setPower(-speed);
+                leftFront.setPower(speed);
+                rightRear.setPower(-speed);
+                leftRear.setPower(speed);
+                sleep(100);
+            }
+
+            do {
+                speed = pidRotate.performPID(getAngle());
+                rightFront.setPower(speed);
+                leftFront.setPower(-speed);
+                rightRear.setPower(speed);
+                leftRear.setPower(-speed);
+            } while (opModeIsActive() && !pidRotate.onTarget());
+        }
+        else
+            do {
+                speed = pidRotate.performPID(getAngle());
+                rightFront.setPower(speed);
+                leftFront.setPower(-speed);
+                rightRear.setPower(speed);
+                leftRear.setPower(-speed);
+            } while (opModeIsActive() && !pidRotate.onTarget());
+
+        /*if (whatAngle > 0) {
 
             while(angles.firstAngle < whatAngle-10){
 
@@ -137,12 +208,18 @@ public class gyroTurnTest extends LinearOpMode {
                 //break;
 
             }
-        }
+        }*/
         speed = 0;
         rightFront.setPower(speed);
         leftFront.setPower(speed);
         rightRear.setPower(speed);
         leftRear.setPower(speed);
+
+        rotation = getAngle();
+
+        sleep(500);
+
+        resetAngle();
 
         /*while (!isStopRequested()) {
             telemetry.addData("turnRightGyro", "going");
@@ -183,6 +260,30 @@ public class gyroTurnTest extends LinearOpMode {
         telemetry.addData("rightRear", rightRear.getCurrentPosition());
         telemetry.update();
     }
+
+    private void resetAngle() {
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        globalAngle = 0;
+    }
+
+    private double getAngle() {
+
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        globalAngle += deltaAngle;
+
+        lastAngles = angles;
+
+        return globalAngle;
+    }
+
     private void turnRightEncoder(int whatAngle, double speed) {
         ticksToTravel = (int) Math.round((tickCount / circumference) * whatAngle);
 
