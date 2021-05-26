@@ -177,6 +177,10 @@ public class gyroTurnTest extends LinearOpMode {
         telemetry.addData("Heading", heading);
         telemetry.addData("Roll", roll);
         telemetry.addData("Pitch", pitch);
+        telemetry.addData("leftFront", leftFront.getCurrentPosition());
+        telemetry.addData("rightFront", rightFront.getCurrentPosition());
+        telemetry.addData("leftRear", leftRear.getCurrentPosition());
+        telemetry.addData("rightRear", rightRear.getCurrentPosition());
         telemetry.update();
     }
     private void turnRightEncoder(int whatAngle, double speed) {
