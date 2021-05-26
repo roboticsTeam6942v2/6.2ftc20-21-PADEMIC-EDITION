@@ -26,10 +26,13 @@ public class UltimateGoalAutonomous extends LinearOpMode {
     private BNO055IMU imu;
     private Orientation angles;
     int ticksToTravel;
-    boolean driveFowardIsRunning = false;
+    boolean driveForwardIsRunning = false;
     boolean strafeRightIsRunning = false;
     boolean resetEncoders = true;
-
+    PIDController pidRotate, pidDrive;
+    private double globalAngle, correction, rotation;
+    Orientation lastAngles = new Orientation();
+    private double power = 0.3;
 
     private final double diameter = 4;
     private final double tickCount = 1120;
@@ -81,17 +84,33 @@ public class UltimateGoalAutonomous extends LinearOpMode {
         diskLauncher = hardwareMap.get(DcMotor.class, "diskLauncher");
         diskLauncher.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        pidRotate = new PIDController(.003, .00003, 0);
+        pidDrive = new PIDController(.05, 0, 0);
+
         waitForStart();
 
 
         while (opModeIsActive()) {
+
+            correction = pidDrive.performPID(getAngle());
+
+            telemetry.addData("1 imu heading", lastAngles.firstAngle);
+            telemetry.addData("2 global heading", globalAngle);
+            telemetry.addData("3 correction", correction);
+            telemetry.addData("4 turn rotation", rotation);
+            telemetry.update();
+
+            rightFront.setPower(power + correction);
+            leftFront.setPower(power - correction);
+            rightRear.setPower(power + correction);
+            leftRear.setPower(power - correction);
 
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             double heading = angles.firstAngle;
             double roll = angles.secondAngle;
             double pitch = angles.thirdAngle;
 
-            if (driveFowardIsRunning == false && resetEncoders == false) {
+            if (driveForwardIsRunning == false && resetEncoders == false) {
                 rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -107,39 +126,22 @@ public class UltimateGoalAutonomous extends LinearOpMode {
                 resetEncoders = true;
             }
 
-            telemetry.addData("Heading", heading);
+            /*telemetry.addData("Heading", heading);
             telemetry.addData("Roll", roll);
             telemetry.addData("Pitch", pitch);
             telemetry.addData("Status:", " Putting In Values");
-            telemetry.update();
+            telemetry.update();*/
 
-            //driveForward(25, 0.6); //negative is to let it move backwards, does that but won't stop
-            //turnRight(90, 0.3); //maybe it'll turn 90 degrees right?
+            driveForward(25, 0.6); //negative is to let it move backwards, does that but won't stop
+            turnRight(90, power); //maybe it'll turn 90 degrees right?
             strafeRight(15, 0.6); //positive to move right, negative for left
 
-            sleep(5000);
-
-            /*leftRear.setTargetPosition(1120);
-            leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            leftRear.setPower(1);
-
-            //1120*0.048425=54 multiplied+equation average
-            //1120*0.01325=15 multiplied average
-            //1120*0.0836=94 equation average
-            rightRear.setTargetPosition(1120);
-            rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightRear.setPower(1);
-
-            while (leftRear.isBusy() && rightRear.isBusy()) {
-                //This block is so that nothing happens while this motors reach their target positions, also telemetry
-                telemetry.addData("Status:", " Running");
-                telemetry.addData("rightRear", rightRear.getCurrentPosition());
-                telemetry.addData("leftRear", leftRear.getCurrentPosition());
-                telemetry.update();
-            }
-
+            rightFront.setPower(0);
+            leftFront.setPower(0);
+            rightRear.setPower(0);
             leftRear.setPower(0);
-            rightRear.setPower(0);*/
+
+            sleep(5000);
 
         }
 
@@ -150,7 +152,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
         //ticksToTravel = (int) Math.round((inches / circumference) * tickCount);
         ticksToTravel = (int) Math.round((tickCount/circumference)*inches);
 
-        driveFowardIsRunning=true;
+        driveForwardIsRunning=true;
 
         rightFront.setTargetPosition(ticksToTravel);
         leftFront.setTargetPosition(ticksToTravel);
@@ -171,7 +173,6 @@ public class UltimateGoalAutonomous extends LinearOpMode {
             //This block is so that nothing happens while this motors reach their target positions, also telemetry
             telemetry.addData("Status:", " Running");
             telemetry.addData("Motor:", speed);
-            telemetry.addData("Angle", angles.firstAngle);
             telemetry.addData("leftFront", leftFront.getCurrentPosition());
             telemetry.addData("rightFront", rightFront.getCurrentPosition());
             telemetry.addData("leftRear", leftRear.getCurrentPosition());
@@ -187,7 +188,7 @@ public class UltimateGoalAutonomous extends LinearOpMode {
         leftRear.setPower(speed);
 
         resetEncoders=false;
-        driveFowardIsRunning=false;
+        driveForwardIsRunning=false;
 
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -248,12 +249,50 @@ public class UltimateGoalAutonomous extends LinearOpMode {
     }
 
     public void turnRight(double whatAngle, double speed) {
+        resetAngle();
+
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        if (whatAngle > 0) {
+        if (Math.abs(whatAngle) > 359) whatAngle = (int) Math.copySign(359, whatAngle);
+
+        pidRotate.reset();
+        pidRotate.setSetpoint(whatAngle);
+        pidRotate.setInputRange(0, whatAngle);
+        pidRotate.setOutputRange(0, speed);
+        pidRotate.setTolerance(1);
+        pidRotate.enable();
+
+        if (whatAngle < 0) {
+
+            while(opModeIsActive() && getAngle() == 0) {
+                rightFront.setPower(-speed);
+                leftFront.setPower(speed);
+                rightRear.setPower(-speed);
+                leftRear.setPower(speed);
+                sleep(100);
+            }
+
+            do {
+                speed = pidRotate.performPID(getAngle());
+                rightFront.setPower(speed);
+                leftFront.setPower(-speed);
+                rightRear.setPower(speed);
+                leftRear.setPower(-speed);
+            } while (opModeIsActive() && !pidRotate.onTarget());
+        }
+        else
+            do {
+                speed = pidRotate.performPID(getAngle());
+                rightFront.setPower(speed);
+                leftFront.setPower(-speed);
+                rightRear.setPower(speed);
+                leftRear.setPower(-speed);
+            } while (opModeIsActive() && !pidRotate.onTarget());
+
+        /*if (whatAngle > 0) {
 
             while(angles.firstAngle < whatAngle-10){
 
@@ -279,12 +318,18 @@ public class UltimateGoalAutonomous extends LinearOpMode {
                 //break;
 
             }
-        }
+        }*/
         speed = 0;
         rightFront.setPower(speed);
         leftFront.setPower(speed);
         rightRear.setPower(speed);
         leftRear.setPower(speed);
+
+        rotation = getAngle();
+
+        sleep(500);
+
+        resetAngle();
 
     }
     private void gyroCalibrate() {
@@ -298,6 +343,29 @@ public class UltimateGoalAutonomous extends LinearOpMode {
         telemetry.addData("Roll", roll);
         telemetry.addData("Pitch", pitch);
         telemetry.update();
+    }
+
+    private void resetAngle() {
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        globalAngle = 0;
+    }
+
+    private double getAngle() {
+
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        globalAngle += deltaAngle;
+
+        lastAngles = angles;
+
+        return globalAngle;
     }
 
 }
