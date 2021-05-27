@@ -1,6 +1,6 @@
 //DriveCode2Players.java 1/23/2020
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.skyStoneSeason2019_2020;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;

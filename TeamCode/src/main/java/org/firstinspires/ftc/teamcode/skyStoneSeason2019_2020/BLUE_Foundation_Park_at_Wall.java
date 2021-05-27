@@ -1,6 +1,6 @@
-//RED_Foundation_Park_at_Skybridge 1/29/2020 
+//BLUE_Foundation_Park_at_Wall 1/23/2020
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.skyStoneSeason2019_2020;
 //Import Lib
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -25,9 +25,10 @@ import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 @Disabled
 @Autonomous
 
-public class RED_Foundation_Park_at_Skybridge extends LinearOpMode {
+public class BLUE_Foundation_Park_at_Wall extends LinearOpMode {
+    
 // Servo    
-    Servo pushServo;    
+    Servo pushServo;
 // sensors
     ColorSensor colorSensorRT;
     ColorSensor colorSensorLT;
@@ -56,8 +57,7 @@ public class RED_Foundation_Park_at_Skybridge extends LinearOpMode {
       liftLeft = hardwareMap.get(DcMotor.class, "liftLeft");
       liftRight = hardwareMap.get(DcMotor.class, "liftRight");
       midShift = hardwareMap.get(DcMotor.class, "midShift");
-       pushServo = hardwareMap.get(Servo.class, "pushServo");
-       
+      pushServo = hardwareMap.get(Servo.class, "pushServo");  
 // set motor modes and directions
       backRight.setDirection(DcMotorSimple.Direction.REVERSE);
       midShift.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -70,9 +70,11 @@ public class RED_Foundation_Park_at_Skybridge extends LinearOpMode {
       liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
       liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
       
-      
-      liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+        liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
       liftRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+      
+      
+      
       midShift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
       
       
@@ -80,7 +82,7 @@ public class RED_Foundation_Park_at_Skybridge extends LinearOpMode {
       
 waitForStart();
     
-// midShift Right to red line
+// midShift Right to blue line
       backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
       backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
       backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -89,9 +91,9 @@ waitForStart();
       midShift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
       midShift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
       
-      midShift.setPower(.30);
+      midShift.setPower(-.20);
 
-      while(colorSensorRT.red() < 30 && opModeIsActive()) {
+      while(colorSensorLT.blue() < 35 && opModeIsActive()) {
         currentDrift = getYaw();
         counterDriftPower = (currentDrift / 90);
         backLeft.setPower(counterDriftPower);
@@ -103,10 +105,10 @@ waitForStart();
       sleep(500); //was set to 1000 1/16/20
 
 // Drive strait to foundation
-      backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-      backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
       backLeft.setPower(.35);
       backRight.setPower(.35);
+      backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+      backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
       backLeft.setTargetPosition(1390);
       backRight.setTargetPosition(1390);
       backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION); 
@@ -118,15 +120,13 @@ waitForStart();
         backLeft.setPower(counterDriftPower + .35);
         backRight.setPower(-counterDriftPower + .35);
       }
-      
-      //lift Arm Up
+//lift Arm Up
       liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
       liftRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
       
       liftRight.setPower(.5);
-      liftLeft.setPower(.5);
-      
-      sleep(1500); 
+      liftLeft.setPower(.5); 
+      sleep(1000); //1500
       
       backLeft.setPower(0);
       backRight.setPower(0);
@@ -143,7 +143,6 @@ waitForStart();
       backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
       while(backLeft.isBusy() && backRight.isBusy() && opModeIsActive()){
-        
         currentDrift = getYaw();
         counterDriftPower = (currentDrift / 90)*2;
         backLeft.setPower(counterDriftPower +.35);
@@ -151,13 +150,14 @@ waitForStart();
       }
         liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
         liftRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-        
+      
         liftRight.setPower(-.1);
         liftLeft.setPower(-.1);
         sleep(200);
         liftRight.setPower(0);
         liftLeft.setPower(0);
         sleep(500);
+        
         
 // Drive Back with foundation
       backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -167,124 +167,73 @@ waitForStart();
       backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); 
       backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-      while(colorSensorRT.red()< 30 && opModeIsActive()){
+      while(colorSensorLT.blue()< 30 && opModeIsActive()){
         currentDrift = getYaw();
         counterDriftPower = (currentDrift / 90)*2;
         backLeft.setPower(counterDriftPower  -.5);
-        backRight.setPower(-counterDriftPower  -.5);
+        backRight.setPower(-counterDriftPower -.5);
       }
-       backLeft.setPower(0);
+      
+      backLeft.setPower(0);
       backRight.setPower(0);
       
-// lift Arm Up and midShift left     
-     
-      liftRight.setPower(.5);
-      liftLeft.setPower(.5);
+// lift Arm Up and midShift left
+
+      liftRight.setPower(0.5);
+      liftLeft.setPower(0.5);
       sleep(500);
       
       midShift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
       
       midShift.setPower(.50);
       
-      midShift.setTargetPosition(-1300); //1300
+      midShift.setTargetPosition(1500); //1300
       
       midShift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
      
      while(midShift.isBusy() && opModeIsActive()){
-        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS); 
-        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+      backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+       backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+       
         currentDrift = getYaw();
         counterDriftPower = (currentDrift / 90);
         backLeft.setPower(counterDriftPower);
-        backRight.setPower(-counterDriftPower);
+        backRight.setPower(-counterDriftPower); 
       }
       
-      
+      midShift.setPower(0);
         midShift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        midShift.setPower(0);
+        
         
         liftRight.setPower(-.1);
         liftLeft.setPower(-.1);
+        
         sleep(500);
         
-        backLeft.setPower(0);
-        backRight.setPower(0);
-        midShift.setPower(0);
-        liftRight.setPower(0);
-        liftLeft.setPower(0);
-        
-// Drive strait out to skybridge
-      
-      backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-      backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-      //backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-     // backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-      
-      backLeft.setPower(.35);
-      backRight.setPower(.35);
-      
-      backLeft.setTargetPosition(1100);
-      backRight.setTargetPosition(1100);
-      
-      backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION); 
-      backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-      while(backLeft.isBusy() && backRight.isBusy() && opModeIsActive()){
-        currentDrift = getYaw();
-        counterDriftPower = (currentDrift /90)*2;
-        backLeft.setPower(counterDriftPower + .35);
-        backRight.setPower(-counterDriftPower + .35);
-      }
-      
       backLeft.setPower(0);
       backRight.setPower(0);
-      sleep(500);
+      liftLeft.setPower(0);
+      liftRight.setPower(0);
+      midShift.setPower(0);
       
-// Tunn 90 Backside to skybridge
-
-    backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-      
-    backLeft.setPower(.30);
-    backRight.setPower(.30);
-      
-     backLeft.setTargetPosition(515);
-     backRight.setTargetPosition(-515);
-      
-     backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION); 
-     backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-      
-      while(backRight.isBusy() && backLeft.isBusy()){
-          
-      }
-      backRight.setPower(0);
-      backLeft.setPower(0);
-      
-      sleep(500);
-      
-      backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-      backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        
-        backLeft.setPower(-.20);
-        backRight.setPower(-.20);
-        //backLeft.setTargetPosition(-800);
-        //backRight.setTargetPosition(-800);
-        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-        
-        while(opModeIsActive() && colorSensorLT.red() < 30 && colorSensorRT.red() < 30) {    
-        
-        }
-        midShift.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
-        
-      sleep(30000);
+      midShift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+      midShift.setPower(.75);
+      midShift.setTargetPosition(400); 
+      midShift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
      
-    
+     
+      while(midShift.isBusy() && colorSensorRT.blue() < 35 && opModeIsActive()){
+          telemetry.addData("color blue:", colorSensorRT.blue());
+          telemetry.update();
   }
+  midShift.setPower(0);
+ midShift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
   
-// navX
+  sleep(15000);
+  
+  
+  
+  }
 private void initNavx() {
     navxMicro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
     gyro = (IntegratingGyroscope)navxMicro;
@@ -296,6 +245,5 @@ private void initNavx() {
 private float getYaw() {
     Orientation angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
     return angles.firstAngle;
-
 }  
-}
+}  

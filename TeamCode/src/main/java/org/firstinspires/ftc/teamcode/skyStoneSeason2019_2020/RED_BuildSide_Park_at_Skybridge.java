@@ -1,5 +1,6 @@
-//BLUE_BuildSide_Park_at_Skybridge 1/23/2020 
-package org.firstinspires.ftc.teamcode;
+//RED_BuildSide_Park_at_Skybridge 1/23/2020
+
+package org.firstinspires.ftc.teamcode.skyStoneSeason2019_2020;
 
 //Import Lib
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -26,7 +27,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 @Disabled
 @Autonomous
 
-public class BLUE_BuildSide_Park_at_Skybridge extends LinearOpMode {
+public class RED_BuildSide_Park_at_Skybridge extends LinearOpMode {
     
 // Servo    
     Servo pushServo;
@@ -71,7 +72,7 @@ public class BLUE_BuildSide_Park_at_Skybridge extends LinearOpMode {
       liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
       liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
       
-   liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+      liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
       liftRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
       
       
@@ -82,10 +83,9 @@ public class BLUE_BuildSide_Park_at_Skybridge extends LinearOpMode {
       pushServo.setPosition(1);
       
 waitForStart();
-
-// move forwards to far side of blue skybridge
-        backLeft.setPower(.3);
-        backRight.setPower(.3);
+// move backwards to far end of the red skybridge
+        backLeft.setPower(.30);
+        backRight.setPower(.30);
         backLeft.setTargetPosition(1100);
         backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRight.setTargetPosition(1100);
@@ -94,23 +94,22 @@ waitForStart();
         while(backLeft.isBusy() && backLeft.isBusy() && opModeIsActive()) {    
          
           currentDrift = getYaw();
-          counterDriftPower = (currentDrift /90) *2;
-          backLeft.setPower(counterDriftPower + .3);
-          backRight.setPower(-counterDriftPower + .3);   }   
+          counterDriftPower = (currentDrift / 90)*2;
+          backLeft.setPower(counterDriftPower + .30);
+          backRight.setPower(-counterDriftPower + .30);   }   
         
         backLeft.setPower(0); 
         backRight.setPower(0); 
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        sleep(2000);
+        sleep(1000);
         
-        
-// Turn 90 back facing Skybridge        
+//Tune 90 back faces skybridge
         backLeft.setPower(.30);
         backRight.setPower(.30);
-        backLeft.setTargetPosition(-550);
+        backLeft.setTargetPosition(515);
         backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRight.setTargetPosition(550);
+        backRight.setTargetPosition(-515);
         backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         
         while(backRight.isBusy() && backLeft.isBusy() && opModeIsActive()) {    
@@ -124,24 +123,21 @@ waitForStart();
         
         sleep(1000);
         
-//Drive backwards to park under Skybridge        
-        backLeft.setPower(-.20);
-        backRight.setPower(-.20);
-       
+//Drive backwards to park under skybridge        
+        backLeft.setPower(-.30);
+        backRight.setPower(-.30);
+        
         backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-       
-        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
         
-        while(colorSensorLT.blue() < 35 && colorSensorRT.blue() < 35) {    
-      
-        }
-        midShift.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
+        while(opModeIsActive() && colorSensorRT.red() <30 && colorSensorLT.red() <30) {    
+            }   
         
-        sleep(30000);
-        
-        
+        backLeft.setPower(0); 
+        backRight.setPower(0); 
+        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        sleep(1000);
 }
 
 // navX
