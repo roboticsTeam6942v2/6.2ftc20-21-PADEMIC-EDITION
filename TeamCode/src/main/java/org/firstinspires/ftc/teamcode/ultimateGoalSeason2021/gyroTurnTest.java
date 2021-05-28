@@ -34,10 +34,10 @@ public class gyroTurnTest extends LinearOpMode {
     Orientation lastAngles = new Orientation();
     private double power = 0.3;
 
-    /*double rightFrontPosition = rightFront.getCurrentPosition();
-    double leftFrontPosition = leftFront.getCurrentPosition();
-    double rightRearPosition = rightRear.getCurrentPosition();
-    double leftRearPosition = leftRear.getCurrentPosition();*/
+    double rightFrontPosition;
+    double leftFrontPosition;
+    double rightRearPosition;
+    double leftRearPosition;
 
     private final double diameter = 4;
     private final double tickCount = 1120;
@@ -295,32 +295,25 @@ public class gyroTurnTest extends LinearOpMode {
         return globalAngle;
     }
 
-    /*class encoderPosition {
-        //hopefully works?? trying to make it similar to getAngle except for encoders
-        i don't know how to do classes/objects/methods, hopefully could get this working
-        to replace the getAngle method so that encoders can be used instead, i don't really know
-        how exactly to go about with that though
+    class encoderPosition {
 
+        private void positionReturn() {
 
-        private void encoderSubtraction() {
-
-            double rightFrontToTravel = ticksToTravel -= rightFrontPosition;
-            double rightRearToTravel = ticksToTravel -= rightRearPosition;
-            double leftFrontToTravel = ticksToTravel -= leftFrontPosition;
-            double leftRearToTravel = ticksToTravel -= leftRearPosition;
-        }
+            int rightFrontPosition = rightFront.getCurrentPosition();
+            int leftFrontPosition = leftFront.getCurrentPosition();
+            int rightRearPosition = rightRear.getCurrentPosition();
+            int leftRearPosition = leftRear.getCurrentPosition();
 
         }
+    }
     private encoderPosition getPosition() {
         encoderPosition position = new encoderPosition();
 
-        position.encoderSubtraction();
+        position.positionReturn();
 
         return position;
-    }*/
 
-
-
+    }
 
     private void turnRightEncoder(int whatAngle, double speed) {
         ticksToTravel = (int) Math.round((tickCount / circumference) * whatAngle);
@@ -433,7 +426,7 @@ public class gyroTurnTest extends LinearOpMode {
         correctionStrafe = pidStrafe.performPID(getAngle());
 
         if (inches < 0) {
-            while (opModeIsActive() && getAngle() == 0) {
+            while (opModeIsActive() && getAngle() == 0 ) {
                 rightFront.setPower(speed);
                 leftFront.setPower(-speed);
                 rightRear.setPower(-speed);
