@@ -28,8 +28,9 @@ public class gyroTurnTest extends LinearOpMode {
     private BNO055IMU imu;
     private Orientation angles;
     int ticksToTravel;
-    PIDController pidRotate, pidDrive;
+    PIDController pidRotate, pidDrive, pidStrafe;
     private double globalAngle, correction, rotation;
+    private double correctionStrafe;
     Orientation lastAngles = new Orientation();
     private double power = 0.3;
 
@@ -85,6 +86,7 @@ public class gyroTurnTest extends LinearOpMode {
 
         pidRotate = new PIDController(.003, .00003, 0);
         pidDrive = new PIDController(.05, 0, 0);
+        pidStrafe = new PIDController(0.003, 0.00003, 0);
 
         telemetry.addData("Status:", " Putting In Values");
         telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
@@ -335,26 +337,17 @@ public class gyroTurnTest extends LinearOpMode {
         rightRear.setTargetPosition(ticksToTravel);
         leftRear.setTargetPosition(-ticksToTravel);
         //Then perish <--- my heart ;-;
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        rightFront.setPower(speed);
+        rightFront.setPower(-speed);
         leftFront.setPower(speed);
         rightRear.setPower(speed);
-        leftRear.setPower(speed);
+        leftRear.setPower(-speed);
 
-        if (leftFront.getCurrentPosition() == ticksToTravel || rightRear.getCurrentPosition() == ticksToTravel) {
-            speed = 0;
-
-            rightFront.setPower(speed);
-            leftFront.setPower(speed);
-            rightRear.setPower(speed);
-            leftRear.setPower(speed);
-        }
-
-        /*while (rightFront.isBusy() && leftFront.isBusy() && rightRear.isBusy() && leftRear.isBusy()) {
+        while (rightFront.isBusy() && leftFront.isBusy() && rightRear.isBusy() && leftRear.isBusy()) {
             //This block is so that nothing happens while this motors reach their target positions, also telemetry
             telemetry.addData("Status:", " Running");
             telemetry.addData("Motor:", speed);
@@ -372,7 +365,7 @@ public class gyroTurnTest extends LinearOpMode {
         rightFront.setPower(speed);
         leftFront.setPower(speed);
         rightRear.setPower(speed);
-        leftRear.setPower(speed);*/
+        leftRear.setPower(speed);
 
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -381,6 +374,55 @@ public class gyroTurnTest extends LinearOpMode {
 
         resetEncoders=false;
         strafeRightIsRunning=false;
+    }
+
+    public void strafeRightWithPID (int inches, double speed) {
+        ticksToTravel = (int) Math.round((tickCount/circumference)*inches);
+
+        strafeRightIsRunning=true;
+
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        resetAngle();
+        pidStrafe.setSetpoint(0);
+        pidStrafe.setInputRange(-90, 90); //Sets min and max of... input/??? idek
+        pidStrafe.setOutputRange(-speed, speed); //I did negative and positive cause strafe uses both.
+        pidStrafe.enable();
+
+        correctionStrafe = pidStrafe.performPID(getAngle());
+
+        rightFront.setPower(-speed + correctionStrafe);
+        leftFront.setPower(speed - correctionStrafe);
+        rightRear.setPower(speed + correctionStrafe);
+        leftRear.setPower(-speed - correctionStrafe);
+
+        //idk i'm adding the correction properly.
+
+        /*this isn't much but I had something in mind i wanted to do and then when I wanted to do it.
+        I FORGOT IT, WHY DOES IT HAVE TO BE LIKE THAT!?!?? so i wrote this hoping i would remember but
+        i didn't. Also i'm having a pretty tough time trying to wrap my mind around getting strafe to
+        work. I thought maybe it could be this simple cause in their example code they really didn't
+        have much for their driving forward code. but i doubt this is gonna work ngl.
+         */
+
+        if (leftFront.getCurrentPosition() == ticksToTravel || rightRear.getCurrentPosition() == ticksToTravel) {
+            speed = 0;
+
+            rightFront.setPower(-speed);
+            leftFront.setPower(speed);
+            rightRear.setPower(speed);
+            leftRear.setPower(-speed);
+
+        }
+
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
     }
 
 }
