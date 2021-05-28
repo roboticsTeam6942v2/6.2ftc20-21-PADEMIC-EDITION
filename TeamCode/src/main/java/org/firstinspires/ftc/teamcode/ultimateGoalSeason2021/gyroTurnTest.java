@@ -34,6 +34,11 @@ public class gyroTurnTest extends LinearOpMode {
     Orientation lastAngles = new Orientation();
     private double power = 0.3;
 
+    /*double rightFrontPosition = rightFront.getCurrentPosition();
+    double leftFrontPosition = leftFront.getCurrentPosition();
+    double rightRearPosition = rightRear.getCurrentPosition();
+    double leftRearPosition = leftRear.getCurrentPosition();*/
+
     private final double diameter = 4;
     private final double tickCount = 1120;
 
@@ -108,6 +113,10 @@ public class gyroTurnTest extends LinearOpMode {
             telemetry.addData("2 global heading", globalAngle);
             telemetry.addData("3 correction", correction);
             telemetry.addData("4 turn rotation", rotation);
+            telemetry.addData("5 rightFront", rightFront.getCurrentPosition());
+            telemetry.addData("5 leftFront", leftFront.getCurrentPosition());
+            telemetry.addData("5 rightRear", rightRear.getCurrentPosition());
+            telemetry.addData("5 leftRear", leftRear.getCurrentPosition());
             telemetry.update();
 
             rightFront.setPower(power + correction);
@@ -122,10 +131,11 @@ public class gyroTurnTest extends LinearOpMode {
 
 
             //turnRightEncoder(-90, 0.6);
-            turnRightGyro(90, power);
-            turnRightGyro(-90, power);
-            turnRightGyro(45, power);
+            //turnRightGyro(90, power);
+            //turnRightGyro(-90, power);
+            //turnRightGyro(45, power);
             //strafeRight(20, 0.5);
+            strafeRightWithPID(20, 0.5);
 
             rightFront.setPower(0);
             leftFront.setPower(0);
@@ -285,6 +295,33 @@ public class gyroTurnTest extends LinearOpMode {
         return globalAngle;
     }
 
+    /*class encoderPosition {
+        //hopefully works?? trying to make it similar to getAngle except for encoders
+        i don't know how to do classes/objects/methods, hopefully could get this working
+        to replace the getAngle method so that encoders can be used instead, i don't really know
+        how exactly to go about with that though
+
+
+        private void encoderSubtraction() {
+
+            double rightFrontToTravel = ticksToTravel -= rightFrontPosition;
+            double rightRearToTravel = ticksToTravel -= rightRearPosition;
+            double leftFrontToTravel = ticksToTravel -= leftFrontPosition;
+            double leftRearToTravel = ticksToTravel -= leftRearPosition;
+        }
+
+        }
+    private encoderPosition getPosition() {
+        encoderPosition position = new encoderPosition();
+
+        position.encoderSubtraction();
+
+        return position;
+    }*/
+
+
+
+
     private void turnRightEncoder(int whatAngle, double speed) {
         ticksToTravel = (int) Math.round((tickCount / circumference) * whatAngle);
 
@@ -387,6 +424,7 @@ public class gyroTurnTest extends LinearOpMode {
         leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         resetAngle();
+        pidStrafe.reset();
         pidStrafe.setSetpoint(0);
         pidStrafe.setInputRange(-90, 90); //Sets min and max of... input/??? idek
         pidStrafe.setOutputRange(-speed, speed); //I did negative and positive cause strafe uses both.
@@ -394,10 +432,36 @@ public class gyroTurnTest extends LinearOpMode {
 
         correctionStrafe = pidStrafe.performPID(getAngle());
 
-        rightFront.setPower(-speed + correctionStrafe);
+        if (inches < 0) {
+            while (opModeIsActive() && getAngle() == 0) {
+                rightFront.setPower(speed);
+                leftFront.setPower(-speed);
+                rightRear.setPower(-speed);
+                leftRear.setPower(speed);
+                sleep(100);
+            }
+
+            do {
+                speed = pidStrafe.performPID(getAngle());
+                rightFront.setPower(-speed);
+                leftFront.setPower(speed);
+                rightRear.setPower(speed);
+                leftRear.setPower(-speed);
+            } while (opModeIsActive() && !pidStrafe.onTarget());
+        }
+        else
+            do {
+                speed = pidStrafe.performPID(getAngle());
+                rightFront.setPower(-speed);
+                leftFront.setPower(speed);
+                rightRear.setPower(speed);
+                leftRear.setPower(-speed);
+            } while (opModeIsActive() && !pidStrafe.onTarget());
+
+        /*rightFront.setPower(-speed + correctionStrafe);
         leftFront.setPower(speed - correctionStrafe);
         rightRear.setPower(speed + correctionStrafe);
-        leftRear.setPower(-speed - correctionStrafe);
+        leftRear.setPower(-speed - correctionStrafe);*/
 
         //idk i'm adding the correction properly.
 
@@ -408,7 +472,9 @@ public class gyroTurnTest extends LinearOpMode {
         have much for their driving forward code. but i doubt this is gonna work ngl.
          */
 
-        if (leftFront.getCurrentPosition() == ticksToTravel || rightRear.getCurrentPosition() == ticksToTravel) {
+        //just copied the pid for the gyro, might work? don't see why not but whatever
+
+        while (leftFront.getCurrentPosition() == ticksToTravel || rightRear.getCurrentPosition() == ticksToTravel) {
             speed = 0;
 
             rightFront.setPower(-speed);
@@ -426,3 +492,4 @@ public class gyroTurnTest extends LinearOpMode {
     }
 
 }
+
