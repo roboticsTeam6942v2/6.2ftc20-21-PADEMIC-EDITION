@@ -315,6 +315,7 @@ public class gyroTurnTest extends LinearOpMode {
 
     }
 
+
     private void turnRightEncoder(int whatAngle, double speed) {
         ticksToTravel = (int) Math.round((tickCount / circumference) * whatAngle);
 
