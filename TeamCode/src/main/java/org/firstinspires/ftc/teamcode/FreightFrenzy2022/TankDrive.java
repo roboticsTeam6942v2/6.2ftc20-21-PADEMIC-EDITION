@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
@@ -13,6 +14,7 @@ public class TankDrive extends LinearOpMode {
     DcMotor backRight;
     DcMotor frontLeft;
     DcMotor frontRight;
+    ColorSensor colorSensor;
 
     @Override
     public void runOpMode() {
@@ -21,6 +23,7 @@ public class TankDrive extends LinearOpMode {
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         frontLeft = hardwareMap.get(DcMotor.class,"frontLeft");
         frontRight = hardwareMap.get(DcMotor.class,"frontRight");
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
         backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -35,6 +38,11 @@ public class TankDrive extends LinearOpMode {
             backRight.setPower(gamepad1.right_stick_y);
             frontLeft.setPower(gamepad1.left_stick_y);
             frontRight.setPower(gamepad1.right_stick_y);
+
+            telemetry.addData("colorSensorBlue: ", colorSensor.blue());
+            telemetry.addData("colorSensorRed: ", colorSensor.red());
+            telemetry.update();
+            
 
 
         }
